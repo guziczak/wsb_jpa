@@ -11,23 +11,25 @@ public class VisitEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID")
 	private Long id;
 
+	@Column(name = "DESCRIPTION")
 	private String description;
 
-	@Column(nullable = false)
+	@Column(name = "TIME", nullable = false)
 	private LocalDateTime time;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "doctor_id", referencedColumnName = "id")
+	@JoinColumn(name = "DOCTOR_ID", referencedColumnName = "ID")
 	private DoctorEntity doctorEntity;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "patient_id", referencedColumnName = "id")
+	@JoinColumn(name = "PATIENT_ID", referencedColumnName = "ID")
 	private PatientEntity patientEntity;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "visit_id")
+	@JoinColumn(name = "VISIT_ID")
 	private List<MedicalTreatmentEntity> medicalTreatmentEntityList;
 
 	public Long getId() {
