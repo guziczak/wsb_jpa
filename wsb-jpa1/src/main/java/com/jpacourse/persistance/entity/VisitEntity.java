@@ -1,6 +1,7 @@
 package com.jpacourse.persistance.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -16,6 +17,18 @@ public class VisitEntity {
 
 	@Column(nullable = false)
 	private LocalDateTime time;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "doctor_id", referencedColumnName = "id")
+	private DoctorEntity doctorEntity;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "patient_id", referencedColumnName = "id")
+	private PatientEntity patientEntity;
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "visit_id")
+	private List<MedicalTreatmentEntity> medicalTreatmentEntityList;
 
 	public Long getId() {
 		return id;
@@ -39,6 +52,22 @@ public class VisitEntity {
 
 	public void setTime(LocalDateTime time) {
 		this.time = time;
+	}
+
+	public DoctorEntity getDoctorEntity() {
+		return doctorEntity;
+	}
+
+	public void setDoctorEntity(DoctorEntity doctorEntity) {
+		this.doctorEntity = doctorEntity;
+	}
+
+	public List<MedicalTreatmentEntity> getMedicalTreatmentEntityList() {
+		return medicalTreatmentEntityList;
+	}
+
+	public void setMedicalTreatmentEntityList(List<MedicalTreatmentEntity> medicalTreatmentEntityList) {
+		this.medicalTreatmentEntityList = medicalTreatmentEntityList;
 	}
 
 }
