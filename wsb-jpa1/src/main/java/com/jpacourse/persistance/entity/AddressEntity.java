@@ -1,6 +1,5 @@
 package com.jpacourse.persistance.entity;
 
-
 import jakarta.persistence.*;
 
 @Entity
@@ -18,6 +17,11 @@ public class AddressEntity {
 	private String addressLine2;
 
 	private String postalCode;
+
+	@OneToOne(mappedBy = "address")
+	private PatientEntity patient;
+
+	// Gettery i settery
 
 	public Long getId() {
 		return id;
@@ -59,4 +63,11 @@ public class AddressEntity {
 		this.postalCode = postalCode;
 	}
 
+	public PatientEntity getPatient() {
+		return patient;
+	}
+
+	public void setPatient(PatientEntity patient) {
+		this.patient = patient;
+	}
 }
