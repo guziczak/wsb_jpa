@@ -21,6 +21,9 @@ public class AddressEntity {
 	@OneToOne(mappedBy = "address")
 	private PatientEntity patient;
 
+	@OneToOne(mappedBy = "address")
+	private DoctorEntity doctor;
+
 	// Gettery i settery
 
 	public Long getId() {
@@ -69,5 +72,13 @@ public class AddressEntity {
 
 	public void setPatient(PatientEntity patient) {
 		this.patient = patient;
+	}
+
+	public DoctorEntity getDoctor() {
+		return doctor;
+	}
+
+	public void setDoctor(DoctorEntity doctor) {
+		this.doctor = doctor;
 	}
 }
