@@ -12,10 +12,12 @@ public class AddressEntity {
 
 	private String city;
 
+	@Column(name = "ADDRESSLINE1")
 	private String addressLine1;
 
+	@Column(name = "ADDRESSLINE2")
 	private String addressLine2;
-
+	@Column(name = "POSTALCODE")
 	private String postalCode;
 
 	@OneToOne(mappedBy = "address")

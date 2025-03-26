@@ -11,26 +11,27 @@ public class DoctorEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(name= "FIRSTNAME", nullable = false)
 	private String firstName;
 
-	@Column(nullable = false)
+	@Column(name= "LASTNAME", nullable = false)
 	private String lastName;
 
-	@Column(nullable = false)
+	@Column(name= "TELEPHONENUMBER", nullable = false)
 	private String telephoneNumber;
 
+	@Column(name= "EMAIL", nullable = false)
 	private String email;
 
-	@Column(nullable = false)
+	@Column(name= "DOCTORNUMBER", nullable = false)
 	private String doctorNumber;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Specialization specialization;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "address_id", referencedColumnName = "id")
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "address_id", referencedColumnName = "id", unique = true)
 	private AddressEntity address;
 
 	// Gettery i settery
