@@ -28,6 +28,9 @@ public class PatientEntity {
 	@Column(name = "DATEOFBIRTH", nullable = false)
 	private LocalDate dateOfBirth;
 
+	@Column(name = "DATE_OF_REGISTER")
+	private LocalDate dateOfRegister;
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id", referencedColumnName = "id", unique = true)
 	private AddressEntity address;
@@ -88,6 +91,14 @@ public class PatientEntity {
 
 	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public LocalDate getDateOfRegister() {
+		return dateOfRegister;
+	}
+
+	public void setDateOfRegister(LocalDate dateOfRegister) {
+		this.dateOfRegister = dateOfRegister;
 	}
 
 	public AddressEntity getAddress() {
