@@ -24,6 +24,14 @@ public class VisitEntity {
 	@JoinColumn(name = "DOCTOR_ID", referencedColumnName = "ID")
 	private DoctorEntity doctorEntity;
 
+	public PatientEntity getPatientEntity() {
+		return patientEntity;
+	}
+
+	public void setPatientEntity(PatientEntity patientEntity) {
+		this.patientEntity = patientEntity;
+	}
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "PATIENT_ID", referencedColumnName = "ID")
 	private PatientEntity patientEntity;
