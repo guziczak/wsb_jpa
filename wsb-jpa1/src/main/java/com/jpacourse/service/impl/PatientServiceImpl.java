@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class PatientServiceImpl implements PatientService {
-    private final PatientDao patientDao;
+    private PatientDao patientDao;
 
     @Autowired
     public PatientServiceImpl(PatientDao patientDao) {this.patientDao = patientDao;}
