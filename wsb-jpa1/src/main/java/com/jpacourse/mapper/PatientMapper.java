@@ -15,6 +15,7 @@ public class PatientMapper {
         patientTO.setLastName(patientEntity.getLastName());
         patientTO.setEmail(patientEntity.getEmail());
         patientTO.setPatientNumber(patientEntity.getPatientNumber());
+        patientTO.setTelephoneNumber(patientEntity.getTelephoneNumber());
         patientTO.setDateOfBirth(patientEntity.getDateOfBirth());
         patientTO.setDateOfRegister(patientEntity.getDateOfRegister());
         patientTO.setAddress(AddressMapper.mapToTO(patientEntity.getAddress()));
@@ -35,6 +36,7 @@ public class PatientMapper {
         patientEntity.setEmail(patientTO.getEmail());
         patientEntity.setPatientNumber(patientTO.getPatientNumber());
         patientEntity.setDateOfBirth(patientTO.getDateOfBirth());
+        patientEntity.setTelephoneNumber(patientTO.getTelephoneNumber());
         patientEntity.setDateOfRegister(patientTO.getDateOfRegister());
         patientEntity.setAddress(AddressMapper.mapToEntity(patientTO.getAddress()));
         return patientEntity;
