@@ -18,6 +18,7 @@ public class PatientMapper {
         patientTO.setDateOfBirth(patientEntity.getDateOfBirth());
         patientTO.setDateOfRegister(patientEntity.getDateOfRegister());
         patientTO.setAddress(AddressMapper.mapToTO(patientEntity.getAddress()));
+        patientTO.setVisits(VisitMapper.mapToTO(patientEntity.getVisitEntityList()));
         return patientTO;
     }
 

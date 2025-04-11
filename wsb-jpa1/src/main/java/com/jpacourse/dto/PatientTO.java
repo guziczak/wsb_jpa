@@ -1,9 +1,8 @@
 package com.jpacourse.dto;
 
-import com.jpacourse.persistance.entity.AddressEntity;
-
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 public class PatientTO implements Serializable {
     private Long id;
@@ -15,6 +14,7 @@ public class PatientTO implements Serializable {
     private LocalDate dateOfBirth;
     private LocalDate dateOfRegister;
     private AddressTO address;
+    private List<VisitTO> visits;
 
     public Long getId() {
         return id;
@@ -86,5 +86,13 @@ public class PatientTO implements Serializable {
 
     public void setAddress(AddressTO address) {
         this.address = address;
+    }
+
+    public List<VisitTO> getVisits() {
+        return visits;
+    }
+
+    public void setVisits(List<VisitTO> visits) {
+        this.visits = visits;
     }
 }
