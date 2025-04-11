@@ -14,7 +14,7 @@ public class PatientTO implements Serializable {
     private String patientNumber;
     private LocalDate dateOfBirth;
     private LocalDate dateOfRegister;
-    private AddressEntity address;
+    private AddressTO address;
 
     public Long getId() {
         return id;
@@ -80,11 +80,11 @@ public class PatientTO implements Serializable {
         this.dateOfRegister = dateOfRegister;
     }
 
-    public AddressEntity getAddress() {
+    public AddressTO getAddress() {
         return address;
     }
 
-    public void setAddress(AddressEntity address) {
+    public void setAddress(AddressTO address) {
         this.address = address;
     }
 }

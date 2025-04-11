@@ -16,7 +16,7 @@ public class PatientController {
     public PatientTO findById(@PathVariable final long id) {
         final PatientTO patientTO = patientService.findById(id);
 
-        if(patientTO == null) return patientTO;
+        if(patientTO != null) return patientTO;
 
         throw new EntityNotFoundException(id);
     }
