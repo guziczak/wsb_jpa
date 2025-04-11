@@ -1,5 +1,6 @@
 package com.jpacourse.persistance.service;
 
+import com.jpacourse.dto.PatientTO;
 import com.jpacourse.persistance.dao.DoctorDao;
 import com.jpacourse.persistance.dao.PatientDao;
 import com.jpacourse.persistance.dao.VisitDao;
@@ -16,8 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class PatientServiceTest {
@@ -33,7 +35,7 @@ public class PatientServiceTest {
 
     @Test
     @Transactional
-    public void shouldDeletePatientAndCascadeAppointmentsButNotDoctors() {
+    public void shouldDeletePatientAndCascadeVisitsButNotDoctors() {
         // given
         DoctorEntity doctor = createAndSaveDoctor();
         PatientEntity patient = createAndSavePatient();
@@ -42,11 +44,34 @@ public class PatientServiceTest {
         // when
         patientService.deleteById(patient.getId());
 
-        // then
+        // expected
+        PatientEntity patientExpected = patientDao.findOne(patient.getId());
+        VisitEntity visitExpected = visitDao.findOne(visit.getId());
+        DoctorEntity doctorExpected = doctorDao.findOne(doctor.getId());
 
-        assertEquals(null, patientDao.findOne(patient.getId()));
-        assertEquals(null, visitDao.findOne(visit.getId()));
-        assertEquals(doctor, doctorDao.findOne(doctor.getId()));
+        // then
+        assertNull(patientExpected);
+        assertNull(visitExpected);
+        assertEquals(doctor, doctorExpected);
+    }
+
+    @Test
+    @Transactional
+    public void shouldFindPatientByIdAndReturnCorrectTO() {
+        // given
+        DoctorEntity doctor = createAndSaveDoctor();
+        PatientEntity patient = createAndSavePatient();
+
+        // when
+        PatientTO patientTO = patientService.findById(patient.getId());
+
+        // then
+        assertNotNull(patientTO);
+        assertEquals(patient.getId(), patientTO.getId());
+        assertEquals(patient.getFirstName(), patientTO.getFirstName());
+        assertEquals(patient.getLastName(), patientTO.getLastName());
+        assertEquals(patient.getDateOfBirth(), patientTO.getDateOfBirth());
+        assertEquals(patient.getDateOfRegister(), patientTO.getDateOfRegister());
     }
 
     private DoctorEntity createAndSaveDoctor() {
@@ -82,15 +107,18 @@ public class PatientServiceTest {
         patient.setAddress(address);
         patient.setDateOfBirth(LocalDate.of(1945, 7, 1));
         patient.setDateOfRegister(LocalDate.of(2025, 1, 1));
+        patient.setVisitEntityList(new ArrayList<>());
 
         return patientDao.save(patient);
     }
 
     private VisitEntity createAndSaveVisit(DoctorEntity doctor, PatientEntity patient) {
         VisitEntity visit = new VisitEntity();
-        visit.setPatient(patient);
         visit.setDoctorEntity(doctor);
         visit.setTime(LocalDateTime.of(2025, 4, 11, 12, 0));
+        visit.setPatient(patient);
+
+        patient.getVisitEntityList().add(visit);
 
         return visitDao.save(visit);
     }

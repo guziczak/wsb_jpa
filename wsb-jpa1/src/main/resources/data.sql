@@ -10,10 +10,10 @@ INSERT INTO Patient (firstName, lastName, telephoneNumber, email, patientNumber,
 ('Marek', 'Wiśniewski', '111222333', 'marek.w@example.com', 'P001', '1985-06-15', 2);
 
 
-INSERT INTO Visit (id, description, time, doctor_id, patient_id) VALUES
-(1, 'Regular checkup', '2025-03-26 10:00:00', 1, 1),
-(2, 'Neurological consultation', '2025-03-27 15:30:00', 1, 1);
+INSERT INTO Visit (description, time, doctor_id, patient_id) VALUES
+('Regular checkup', '2025-03-26 10:00:00', 1, 1),
+('Neurological consultation', '2025-03-27 15:30:00', 1, 1);
 
-INSERT INTO Medical_Treatment (id, description, type, visit_id) VALUES
-(1, 'Blood pressure check', 'EKG', 1),
-(2, 'MRI scan', 'RTG', 2);
+INSERT INTO Medical_Treatment (description, type, visit_id) VALUES
+('Blood pressure check', 'EKG', 1),
+('MRI scan', 'RTG', 2);
