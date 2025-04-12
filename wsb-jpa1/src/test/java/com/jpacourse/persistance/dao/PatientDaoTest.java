@@ -67,7 +67,7 @@ public class PatientDaoTest
         assertThat(firstVisit.getDoctorEntity()).isNotNull();
         assertThat(firstVisit.getDoctorEntity().getFirstName()).isEqualTo("John");
         assertThat(firstVisit.getDoctorEntity().getLastName()).isEqualTo("Doe");
-        assertThat(firstVisit.getDoctorEntity().getSpecialization()).isEqualTo("SURGEON");
+        assertThat(firstVisit.getDoctorEntity().getSpecialization().toString()).isEqualTo("SURGEON");
 
         // Sprawdzenie danych drugiej wizyty
         VisitEntity secondVisit = patient.getVisitEntityList().stream()
