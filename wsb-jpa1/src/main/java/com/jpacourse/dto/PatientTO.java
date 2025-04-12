@@ -1,7 +1,5 @@
 package com.jpacourse.dto;
 
-import com.jpacourse.persistance.entity.AddressEntity;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +13,7 @@ public class PatientTO implements Serializable {
     private String patientNumber;
     private LocalDate dateOfBirth;
     private LocalDate dateOfRegister;
-    private AddressEntity address;
+    private AddressTO address;
     private List<VisitTO> visits;
 
     public Long getId() {
@@ -50,14 +48,6 @@ public class PatientTO implements Serializable {
         this.telephoneNumber = telephoneNumber;
     }
 
-    public List<VisitTO> getVisits() {
-        return visits;
-    }
-
-    public void setVisits(List<VisitTO> visits) {
-        this.visits = visits;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -65,6 +55,7 @@ public class PatientTO implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
     public String getPatientNumber() {
         return patientNumber;
     }
@@ -89,12 +80,20 @@ public class PatientTO implements Serializable {
         this.dateOfRegister = dateOfRegister;
     }
 
-    public AddressEntity getAddress() {
+    public AddressTO getAddress() {
         return address;
     }
 
-    public void setAddress(AddressEntity address) {
+    public void setAddress(AddressTO address) {
         this.address = address;
+    }
+
+    public List<VisitTO> getVisits() {
+        return visits;
+    }
+
+    public void setVisits(List<VisitTO> visits) {
+        this.visits = visits;
     }
 
 }
