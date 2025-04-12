@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +25,63 @@ public class PatientDaoTest
 
     // Zakładam, że w bazie danych testowych istnieje lekarz o ID 1
     private static final Long EXISTING_DOCTOR_ID = 1L;
+
+    @Transactional
+    @Test
+    public void testShouldVerifyTestDataFromDataSql() {
+        // given
+        Long patientId = 1L;
+
+        // when
+        PatientEntity patient = patientDao.findOne(patientId);
+
+        // then
+        assertThat(patient).isNotNull();
+        assertThat(patient.getFirstName()).isEqualTo("Marek");
+        assertThat(patient.getLastName()).isEqualTo("Wiśniewski");
+        assertThat(patient.getTelephoneNumber()).isEqualTo("111222333");
+        assertThat(patient.getEmail()).isEqualTo("marek.w@example.com");
+        assertThat(patient.getPatientNumber()).isEqualTo("P001");
+        assertThat(patient.getDateOfBirth()).isEqualTo(LocalDate.of(1985, 6, 15));
+
+        // Sprawdzenie adresu pacjenta
+        assertThat(patient.getAddress()).isNotNull();
+        assertThat(patient.getAddress().getCity()).isEqualTo("Kraków");
+        assertThat(patient.getAddress().getAddressLine1()).isEqualTo("ul. Floriańska 5");
+        assertThat(patient.getAddress().getPostalCode()).isEqualTo("31-019");
+
+        // Sprawdzenie wizyt pacjenta
+        assertThat(patient.getVisitEntityList()).isNotNull();
+        assertThat(patient.getVisitEntityList().size()).isEqualTo(2);
+
+        // Sprawdzenie danych pierwszej wizyty
+        VisitEntity firstVisit = patient.getVisitEntityList().stream()
+                .filter(v -> v.getDescription().equals("Regular checkup"))
+                .findFirst()
+                .orElse(null);
+
+        assertThat(firstVisit).isNotNull();
+        assertThat(firstVisit.getTime()).isEqualTo(
+                LocalDateTime.parse("2025-03-26 10:00:00",
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        assertThat(firstVisit.getDoctorEntity()).isNotNull();
+        assertThat(firstVisit.getDoctorEntity().getFirstName()).isEqualTo("John");
+        assertThat(firstVisit.getDoctorEntity().getLastName()).isEqualTo("Doe");
+        assertThat(firstVisit.getDoctorEntity().getSpecialization()).isEqualTo("SURGEON");
+
+        // Sprawdzenie danych drugiej wizyty
+        VisitEntity secondVisit = patient.getVisitEntityList().stream()
+                .filter(v -> v.getDescription().equals("Neurological consultation"))
+                .findFirst()
+                .orElse(null);
+
+        assertThat(secondVisit).isNotNull();
+        assertThat(secondVisit.getTime()).isEqualTo(
+                LocalDateTime.parse("2025-03-27 15:30:00",
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        assertThat(secondVisit.getDoctorEntity()).isNotNull();
+        assertThat(secondVisit.getDoctorEntity().getId()).isEqualTo(EXISTING_DOCTOR_ID);
+    }
 
     @Transactional
     @Test
