@@ -3,10 +3,11 @@ package com.jpacourse.rest;
 import com.jpacourse.dto.PatientTO;
 import com.jpacourse.rest.exception.EntityNotFoundException;
 import com.jpacourse.service.PatientService;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class PatientController {
@@ -19,6 +20,23 @@ public class PatientController {
     @GetMapping("/patient/{id}")
     public PatientTO findById(@PathVariable final long id) {
         return patientService.findById(id);
+    }
+
+    @GetMapping("/patients")
+    public List<PatientTO> findAll() {
+        return patientService.findAll();
+    }
+
+    @PostMapping("/patient")
+    public ResponseEntity<PatientTO> createPatient(@RequestBody final PatientTO patientTO) {
+        PatientTO savedPatient = patientService.save(patientTO);
+        return new ResponseEntity<>(savedPatient, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/patient/{id}")
+    public PatientTO updatePatient(@PathVariable final long id, @RequestBody final PatientTO patientTO) {
+        patientTO.setId(id);
+        return patientService.update(patientTO);
     }
 
     @DeleteMapping("/patient/{id}")

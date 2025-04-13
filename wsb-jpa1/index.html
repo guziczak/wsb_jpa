@@ -9,8 +9,12 @@
             --primary-color: #2c3e50;
             --secondary-color: #3498db;
             --accent-color: #e74c3c;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
             --light-color: #ecf0f1;
             --dark-color: #34495e;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
 
         * {
@@ -23,14 +27,15 @@
         body {
             background-color: var(--light-color);
             padding: 20px;
+            color: #333;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             background-color: white;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
             overflow: hidden;
         }
 
@@ -39,6 +44,45 @@
             color: white;
             padding: 20px;
             text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            background-color: var(--dark-color);
+        }
+
+        .tab {
+            padding: 15px 20px;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            flex: 1;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .tab.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-bottom: 3px solid var(--secondary-color);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .main-content {
@@ -50,7 +94,7 @@
             flex: 1;
             min-width: 300px;
             padding: 20px;
-            background-color: #f5f5f5;
+            background-color: #f8f9fa;
             border-right: 1px solid #ddd;
         }
 
@@ -58,6 +102,11 @@
             flex: 2;
             min-width: 300px;
             padding: 20px;
+        }
+
+        h2, h3, h4 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
         }
 
         .form-group {
@@ -72,12 +121,26 @@
         }
 
         input[type="text"],
-        input[type="number"] {
+        input[type="number"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        select,
+        textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 16px;
+            transition: var(--transition);
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
         }
 
         .button-group {
@@ -87,12 +150,12 @@
         }
 
         button {
-            padding: 10px 15px;
+            padding: 12px 20px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            transition: background-color 0.3s;
+            transition: var(--transition);
         }
 
         .primary-btn {
@@ -102,6 +165,17 @@
 
         .primary-btn:hover {
             background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .success-btn {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .success-btn:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
         }
 
         .danger-btn {
@@ -111,6 +185,7 @@
 
         .danger-btn:hover {
             background-color: #c0392b;
+            transform: translateY(-2px);
         }
 
         .patient-details {
@@ -125,6 +200,12 @@
             margin-top: 20px;
             background-color: white;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .patient-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
         }
 
         .patient-card h3 {
@@ -165,6 +246,21 @@
             padding: 15px;
             margin: 15px 0;
             border-radius: 4px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .message .close-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+
+        .message .close-btn:hover {
+            opacity: 1;
         }
 
         .error {
@@ -179,8 +275,160 @@
             border: 1px solid #c8e6c9;
         }
 
+        .warning {
+            background-color: #fff8e1;
+            color: #ff8f00;
+            border: 1px solid #ffecb3;
+        }
+
         .hidden {
             display: none;
+        }
+
+        .patients-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .patient-item {
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .action-icon {
+            padding: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .edit-icon {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .delete-icon {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .view-icon {
+            background-color: var(--dark-color);
+            color: white;
+        }
+
+        .action-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Loader */
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--secondary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Form layout improvements */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        fieldset {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        legend {
+            padding: 0 10px;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Confirmation dialog */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+            transform: translateY(-20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -190,103 +438,340 @@
         <h1>System zarządzania pacjentami</h1>
     </header>
 
-    <div class="main-content">
-        <div class="sidebar">
-            <h2>Wyszukaj pacjenta</h2>
-            <div class="form-group">
-                <label for="patient-id">ID pacjenta:</label>
-                <input type="number" id="patient-id" min="1" placeholder="Wprowadź ID pacjenta">
+    <div class="tabs">
+        <div class="tab active" data-tab="find-patient">Wyszukaj pacjenta</div>
+        <div class="tab" data-tab="all-patients">Lista pacjentów</div>
+        <div class="tab" data-tab="add-patient">Dodaj pacjenta</div>
+        <div class="tab" data-tab="edit-patient">Edytuj pacjenta</div>
+    </div>
+
+    <!-- Wyszukaj pacjenta -->
+    <div class="tab-content active" id="find-patient">
+        <div class="main-content">
+            <div class="sidebar">
+                <h2>Wyszukaj pacjenta</h2>
+                <div class="form-group">
+                    <label for="patient-id">ID pacjenta:</label>
+                    <input type="number" id="patient-id" min="1" placeholder="Wprowadź ID pacjenta">
+                </div>
+
+                <div class="button-group">
+                    <button id="find-btn" class="primary-btn">Znajdź pacjenta</button>
+                    <button id="delete-btn" class="danger-btn">Usuń pacjenta</button>
+                </div>
+
+                <div id="message-search" class="message hidden">
+                    <span class="close-btn">&times;</span>
+                    <span class="message-text"></span>
+                </div>
             </div>
 
-            <div class="button-group">
-                <button id="find-btn" class="primary-btn">Znajdź pacjenta</button>
-                <button id="delete-btn" class="danger-btn">Usuń pacjenta</button>
-            </div>
+            <div class="content">
+                <h2>Szczegóły pacjenta</h2>
+                <p id="no-patient">Wprowadź ID pacjenta i kliknij "Znajdź pacjenta", aby wyświetlić szczegóły.</p>
+                <div id="patient-loader" class="loader hidden"></div>
 
-            <div id="message" class="message hidden"></div>
-        </div>
+                <div id="patient-details" class="patient-details">
+                    <div class="patient-card">
+                        <h3 id="patient-name">Dane pacjenta</h3>
 
-        <div class="content">
-            <h2>Szczegóły pacjenta</h2>
-            <p id="no-patient">Wprowadź ID pacjenta i kliknij "Znajdź pacjenta", aby wyświetlić szczegóły.</p>
-
-            <div id="patient-details" class="patient-details">
-                <div class="patient-card">
-                    <h3 id="patient-name">Dane pacjenta</h3>
-
-                    <div class="patient-info">
-                        <div class="info-group">
-                            <div class="info-label">Imię:</div>
-                            <div id="patient-firstname" class="info-value"></div>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-label">Nazwisko:</div>
-                            <div id="patient-lastname" class="info-value"></div>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-label">Numer telefonu:</div>
-                            <div id="patient-phone" class="info-value"></div>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-label">Email:</div>
-                            <div id="patient-email" class="info-value"></div>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-label">Numer pacjenta:</div>
-                            <div id="patient-number" class="info-value"></div>
-                        </div>
-
-                        <div class="info-group">
-                            <div class="info-label">Data urodzenia:</div>
-                            <div id="patient-dob" class="info-value"></div>
-                        </div>
-                    </div>
-
-                    <div class="address-section">
-                        <h4>Adres:</h4>
                         <div class="patient-info">
                             <div class="info-group">
-                                <div class="info-label">Miasto:</div>
-                                <div id="patient-city" class="info-value"></div>
+                                <div class="info-label">Imię:</div>
+                                <div id="patient-firstname" class="info-value"></div>
                             </div>
 
                             <div class="info-group">
-                                <div class="info-label">Kod pocztowy:</div>
-                                <div id="patient-postalcode" class="info-value"></div>
+                                <div class="info-label">Nazwisko:</div>
+                                <div id="patient-lastname" class="info-value"></div>
                             </div>
 
                             <div class="info-group">
-                                <div class="info-label">Adres (linia 1):</div>
-                                <div id="patient-address1" class="info-value"></div>
+                                <div class="info-label">Numer telefonu:</div>
+                                <div id="patient-phone" class="info-value"></div>
                             </div>
 
                             <div class="info-group">
-                                <div class="info-label">Adres (linia 2):</div>
-                                <div id="patient-address2" class="info-value"></div>
+                                <div class="info-label">Email:</div>
+                                <div id="patient-email" class="info-value"></div>
                             </div>
+
+                            <div class="info-group">
+                                <div class="info-label">Numer pacjenta:</div>
+                                <div id="patient-number" class="info-value"></div>
+                            </div>
+
+                            <div class="info-group">
+                                <div class="info-label">Data urodzenia:</div>
+                                <div id="patient-dob" class="info-value"></div>
+                            </div>
+
+                            <div class="info-group">
+                                <div class="info-label">Data rejestracji:</div>
+                                <div id="patient-registration" class="info-value"></div>
+                            </div>
+                        </div>
+
+                        <div class="address-section">
+                            <h4>Adres:</h4>
+                            <div class="patient-info">
+                                <div class="info-group">
+                                    <div class="info-label">Miasto:</div>
+                                    <div id="patient-city" class="info-value"></div>
+                                </div>
+
+                                <div class="info-group">
+                                    <div class="info-label">Kod pocztowy:</div>
+                                    <div id="patient-postalcode" class="info-value"></div>
+                                </div>
+
+                                <div class="info-group">
+                                    <div class="info-label">Adres (linia 1):</div>
+                                    <div id="patient-address1" class="info-value"></div>
+                                </div>
+
+                                <div class="info-group">
+                                    <div class="info-label">Adres (linia 2):</div>
+                                    <div id="patient-address2" class="info-value"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="visits-section" id="visits-section">
+                            <h4>Wizyty:</h4>
+                            <div id="visits-list"></div>
+                        </div>
+
+                        <div class="button-group" style="margin-top: 30px;">
+                            <button id="edit-this-patient" class="primary-btn">Edytuj pacjenta</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Lista wszystkich pacjentów -->
+    <div class="tab-content" id="all-patients">
+        <h2>Lista wszystkich pacjentów</h2>
+        <div id="message-list" class="message hidden">
+            <span class="close-btn">&times;</span>
+            <span class="message-text"></span>
+        </div>
+        <div id="list-loader" class="loader hidden"></div>
+        <table id="patients-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imię i nazwisko</th>
+                <th>Numer pacjenta</th>
+                <th>Numer telefonu</th>
+                <th>Email</th>
+                <th>Akcje</th>
+            </tr>
+            </thead>
+            <tbody id="patients-table-body">
+            <!-- Lista pacjentów będzie tutaj dynamicznie dodawana -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Dodaj pacjenta -->
+    <div class="tab-content" id="add-patient">
+        <h2>Dodaj nowego pacjenta</h2>
+        <div id="message-add" class="message hidden">
+            <span class="close-btn">&times;</span>
+            <span class="message-text"></span>
+        </div>
+        <div id="add-loader" class="loader hidden"></div>
+
+        <form id="add-patient-form">
+            <div class="form-grid">
+                <div>
+                    <fieldset>
+                        <legend>Dane osobowe</legend>
+                        <div class="form-group">
+                            <label for="new-firstname">Imię:</label>
+                            <input type="text" id="new-firstname" name="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-lastname">Nazwisko:</label>
+                            <input type="text" id="new-lastname" name="lastName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-dob">Data urodzenia:</label>
+                            <input type="date" id="new-dob" name="dateOfBirth" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-patient-number">Numer pacjenta:</label>
+                            <input type="text" id="new-patient-number" name="patientNumber" required>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div>
+                    <fieldset>
+                        <legend>Dane kontaktowe</legend>
+                        <div class="form-group">
+                            <label for="new-phone">Numer telefonu:</label>
+                            <input type="tel" id="new-phone" name="telephoneNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-email">Email:</label>
+                            <input type="email" id="new-email" name="email" required>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <fieldset>
+                <legend>Adres</legend>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="new-city">Miasto:</label>
+                        <input type="text" id="new-city" name="address.city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-postal-code">Kod pocztowy:</label>
+                        <input type="text" id="new-postal-code" name="address.postalCode" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-address1">Adres (linia 1):</label>
+                        <input type="text" id="new-address1" name="address.addressLine1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-address2">Adres (linia 2):</label>
+                        <input type="text" id="new-address2" name="address.addressLine2">
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="button-group">
+                <button type="submit" class="success-btn">Dodaj pacjenta</button>
+                <button type="reset" class="danger-btn">Wyczyść formularz</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Edytuj pacjenta -->
+    <div class="tab-content" id="edit-patient">
+        <h2>Edytuj pacjenta</h2>
+        <div id="message-edit" class="message hidden">
+            <span class="close-btn">&times;</span>
+            <span class="message-text"></span>
+        </div>
+        <div id="edit-loader" class="loader hidden"></div>
+
+        <form id="edit-patient-form">
+            <input type="hidden" id="edit-id" name="id">
+
+            <div class="form-grid">
+                <div>
+                    <fieldset>
+                        <legend>Dane osobowe</legend>
+                        <div class="form-group">
+                            <label for="edit-firstname">Imię:</label>
+                            <input type="text" id="edit-firstname" name="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-lastname">Nazwisko:</label>
+                            <input type="text" id="edit-lastname" name="lastName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-dob">Data urodzenia:</label>
+                            <input type="date" id="edit-dob" name="dateOfBirth" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-register-date">Data rejestracji:</label>
+                            <input type="date" id="edit-register-date" name="dateOfRegister" required readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-patient-number">Numer pacjenta:</label>
+                            <input type="text" id="edit-patient-number" name="patientNumber" required>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div>
+                    <fieldset>
+                        <legend>Dane kontaktowe</legend>
+                        <div class="form-group">
+                            <label for="edit-phone">Numer telefonu:</label>
+                            <input type="tel" id="edit-phone" name="telephoneNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-email">Email:</label>
+                            <input type="email" id="edit-email" name="email" required>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <fieldset>
+                <legend>Adres</legend>
+                <input type="hidden" id="edit-address-id" name="address.id">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="edit-city">Miasto:</label>
+                        <input type="text" id="edit-city" name="address.city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-postal-code">Kod pocztowy:</label>
+                        <input type="text" id="edit-postal-code" name="address.postalCode" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-address1">Adres (linia 1):</label>
+                        <input type="text" id="edit-address1" name="address.addressLine1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-address2">Adres (linia 2):</label>
+                        <input type="text" id="edit-address2" name="address.addressLine2">
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="button-group">
+                <button type="submit" class="primary-btn">Zapisz zmiany</button>
+                <button type="button" id="cancel-edit-btn" class="danger-btn">Anuluj</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal with confirmation dialog -->
+<div class="modal-overlay" id="confirm-modal">
+    <div class="modal-content">
+        <h3>Potwierdzenie</h3>
+        <p id="confirm-message">Czy na pewno chcesz wykonać tę operację?</p>
+        <div class="button-group">
+            <button id="confirm-yes" class="danger-btn">Tak</button>
+            <button id="confirm-no" class="primary-btn">Nie</button>
+        </div>
+    </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Referencje do elementów DOM
+        // Zmienne globalne
+        const API_URL = 'http://localhost:8091';
+        let currentPatient = null;
+        let confirmCallback = null;
+
+        // Referencje do elementów DOM - zakładki
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Referencje do elementów DOM - wyszukiwanie pacjenta
         const patientIdInput = document.getElementById('patient-id');
         const findBtn = document.getElementById('find-btn');
         const deleteBtn = document.getElementById('delete-btn');
         const patientDetails = document.getElementById('patient-details');
         const noPatient = document.getElementById('no-patient');
-        const messageDiv = document.getElementById('message');
+        const patientLoader = document.getElementById('patient-loader');
+        const messageSearch = document.getElementById('message-search');
+        const editThisPatientBtn = document.getElementById('edit-this-patient');
 
-        // Elementy danych pacjenta
+        // Elementy danych pacjenta - szczegóły
         const patientName = document.getElementById('patient-name');
         const patientFirstname = document.getElementById('patient-firstname');
         const patientLastname = document.getElementById('patient-lastname');
@@ -294,22 +779,90 @@
         const patientEmail = document.getElementById('patient-email');
         const patientNumber = document.getElementById('patient-number');
         const patientDob = document.getElementById('patient-dob');
+        const patientRegistration = document.getElementById('patient-registration');
         const patientCity = document.getElementById('patient-city');
         const patientPostalcode = document.getElementById('patient-postalcode');
         const patientAddress1 = document.getElementById('patient-address1');
         const patientAddress2 = document.getElementById('patient-address2');
+        const visitsSection = document.getElementById('visits-section');
+        const visitsList = document.getElementById('visits-list');
+
+        // Referencje do elementów DOM - lista pacjentów
+        const messageList = document.getElementById('message-list');
+        const listLoader = document.getElementById('list-loader');
+        const patientsTableBody = document.getElementById('patients-table-body');
+
+        // Referencje do elementów DOM - dodawanie pacjenta
+        const addPatientForm = document.getElementById('add-patient-form');
+        const messageAdd = document.getElementById('message-add');
+        const addLoader = document.getElementById('add-loader');
+
+        // Referencje do elementów DOM - edycja pacjenta
+        const editPatientForm = document.getElementById('edit-patient-form');
+        const messageEdit = document.getElementById('message-edit');
+        const editLoader = document.getElementById('edit-loader');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+
+        // Referencje do elementów DOM - modal potwierdzenia
+        const confirmModal = document.getElementById('confirm-modal');
+        const confirmMessage = document.getElementById('confirm-message');
+        const confirmYesBtn = document.getElementById('confirm-yes');
+        const confirmNoBtn = document.getElementById('confirm-no');
+
+        // Przyciski zamykania komunikatów
+        const closeButtons = document.querySelectorAll('.close-btn');
+
+        // ======================================================
+        // OBSŁUGA ZAKŁADEK
+        // ======================================================
+
+        // Przełączanie między zakładkami
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Aktualizacja klasy active dla zakładek
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Aktualizacja zakładek zawartości
+                const tabId = tab.dataset.tab;
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+
+                // Akcje specyficzne dla zakładek
+                if (tabId === 'all-patients') {
+                    loadAllPatients();
+                }
+            });
+        });
+
+        // ======================================================
+        // OBSŁUGA KOMUNIKATÓW
+        // ======================================================
 
         // Funkcja do wyświetlania wiadomości
-        function showMessage(text, type) {
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.classList.remove('hidden');
+        function showMessage(element, text, type) {
+            element.querySelector('.message-text').textContent = text;
+            element.className = `message ${type}`;
+            element.classList.remove('hidden');
 
-            // Ukryj wiadomość po 5 sekundach
+            // Automatyczne ukrycie wiadomości po 5 sekundach
             setTimeout(() => {
-                messageDiv.classList.add('hidden');
+                element.classList.add('hidden');
             }, 5000);
         }
+
+        // Obsługa przycisków zamykania komunikatów
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                button.parentElement.classList.add('hidden');
+            });
+        });
+
+        // ======================================================
+        // OBSŁUGA FORMATOWANIA
+        // ======================================================
 
         // Funkcja do formatowania daty
         function formatDate(dateString) {
@@ -323,65 +876,187 @@
             });
         }
 
-        // Funkcja do pobierania pacjenta
+        // Funkcja do formatowania czasu
+        function formatDateTime(dateTimeString) {
+            if (!dateTimeString) return 'Brak danych';
+
+            const date = new Date(dateTimeString);
+            return date.toLocaleDateString('pl-PL', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Funkcja do formatowania daty do formatu wymaganego przez input date
+        function formatDateForInput(dateString) {
+            if (!dateString) return '';
+
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+
+            return `${year}-${month}-${day}`;
+        }
+
+        // ======================================================
+        // OBSŁUGA ZAPYTAŃ DO API
+        // ======================================================
+
+        // Funkcja pomocnicza do obsługi błędów HTTP
+        function handleHttpError(response) {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Pacjent o podanym ID nie został znaleziony');
+                }
+                throw new Error(`Błąd HTTP: ${response.status} - ${response.statusText}`);
+            }
+            return response;
+        }
+
+        // Funkcja do pobierania pacjenta po ID
         async function fetchPatient(id) {
             try {
-                const response = await fetch(`http://localhost:8091/patient/${id}`, {
+                patientLoader.classList.remove('hidden');
+                noPatient.style.display = 'none';
+
+                const response = await fetch(`${API_URL}/patient/${id}`, {
                     method: 'GET',
-                    mode: 'cors',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     }
                 });
 
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        throw new Error('Pacjent o podanym ID nie został znaleziony');
-                    }
-                    throw new Error('Wystąpił błąd podczas pobierania danych pacjenta');
-                }
-
-                return await response.json();
+                handleHttpError(response);
+                const data = await response.json();
+                return data;
             } catch (error) {
-                showMessage(error.message || 'Błąd CORS: Serwer nie zezwala na dostęp z tej strony', 'error');
+                showMessage(messageSearch, error.message || 'Wystąpił błąd podczas pobierania danych pacjenta', 'error');
                 return null;
+            } finally {
+                patientLoader.classList.add('hidden');
+            }
+        }
+
+        // Funkcja do pobierania wszystkich pacjentów
+        async function fetchAllPatients() {
+            try {
+                listLoader.classList.remove('hidden');
+
+                const response = await fetch(`${API_URL}/patients`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                handleHttpError(response);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                showMessage(messageList, error.message || 'Wystąpił błąd podczas pobierania listy pacjentów', 'error');
+                return [];
+            } finally {
+                listLoader.classList.add('hidden');
             }
         }
 
         // Funkcja do usuwania pacjenta
         async function deletePatient(id) {
             try {
-                const response = await fetch(`http://localhost:8091/patient/${id}`, {
+                patientLoader.classList.remove('hidden');
+
+                const response = await fetch(`${API_URL}/patient/${id}`, {
                     method: 'DELETE',
-                    mode: 'cors',
                     headers: {
                         'Content-Type': 'application/json'
                     }
                 });
 
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        throw new Error('Pacjent o podanym ID nie został znaleziony');
-                    }
-                    throw new Error('Wystąpił błąd podczas usuwania pacjenta');
-                }
-
+                handleHttpError(response);
                 return true;
             } catch (error) {
-                showMessage(error.message, 'error');
+                showMessage(messageSearch, error.message || 'Wystąpił błąd podczas usuwania pacjenta', 'error');
                 return false;
+            } finally {
+                patientLoader.classList.add('hidden');
             }
         }
 
-        // Funkcja do wyświetlania danych pacjenta
+        // Funkcja do dodawania nowego pacjenta
+        async function createPatient(patientData) {
+            try {
+                addLoader.classList.remove('hidden');
+
+                // Dodaj datę rejestracji (bieżący dzień)
+                patientData.dateOfRegister = new Date().toISOString().split('T')[0];
+
+                const response = await fetch(`${API_URL}/patient`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(patientData)
+                });
+
+                handleHttpError(response);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                showMessage(messageAdd, error.message || 'Wystąpił błąd podczas dodawania pacjenta', 'error');
+                return null;
+            } finally {
+                addLoader.classList.add('hidden');
+            }
+        }
+
+        // Funkcja do aktualizacji pacjenta
+        async function updatePatient(id, patientData) {
+            try {
+                editLoader.classList.remove('hidden');
+
+                const response = await fetch(`${API_URL}/patient/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(patientData)
+                });
+
+                handleHttpError(response);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                showMessage(messageEdit, error.message || 'Wystąpił błąd podczas aktualizacji pacjenta', 'error');
+                return null;
+            } finally {
+                editLoader.classList.add('hidden');
+            }
+        }
+
+        // ======================================================
+        // OBSŁUGA WYŚWIETLANIA DANYCH
+        // ======================================================
+
+        // Funkcja do wyświetlania szczegółów pacjenta
         function displayPatientDetails(patient) {
             if (!patient) {
                 patientDetails.style.display = 'none';
                 noPatient.style.display = 'block';
+                currentPatient = null;
                 return;
             }
 
+            currentPatient = patient;
+
+            // Podstawowe dane pacjenta
             patientName.textContent = `${patient.firstName} ${patient.lastName}`;
             patientFirstname.textContent = patient.firstName || 'Brak danych';
             patientLastname.textContent = patient.lastName || 'Brak danych';
@@ -389,6 +1064,7 @@
             patientEmail.textContent = patient.email || 'Brak danych';
             patientNumber.textContent = patient.patientNumber || 'Brak danych';
             patientDob.textContent = formatDate(patient.dateOfBirth);
+            patientRegistration.textContent = formatDate(patient.dateOfRegister);
 
             // Dane adresowe
             if (patient.address) {
@@ -403,16 +1079,206 @@
                 patientAddress2.textContent = 'Brak danych';
             }
 
+            // Wizyty pacjenta
+            if (patient.visits && patient.visits.length > 0) {
+                visitsSection.style.display = 'block';
+
+                let visitsHTML = '<table><thead><tr><th>Data wizyty</th><th>Lekarz</th><th>Zabiegi</th></tr></thead><tbody>';
+
+                patient.visits.forEach(visit => {
+                    const doctorName = visit.doctor ? `${visit.doctor.firstName} ${visit.doctor.lastName}` : 'Brak danych';
+
+                    let treatments = 'Brak zabiegów';
+                    if (visit.medicalTreatment && visit.medicalTreatment.length > 0) {
+                        treatments = visit.medicalTreatment.map(t => t.treatmentType).join(', ');
+                    }
+
+                    visitsHTML += `
+                        <tr>
+                            <td>${formatDateTime(visit.time)}</td>
+                            <td>${doctorName}</td>
+                            <td>${treatments}</td>
+                        </tr>
+                    `;
+                });
+
+                visitsHTML += '</tbody></table>';
+                visitsList.innerHTML = visitsHTML;
+            } else {
+                visitsSection.style.display = 'none';
+                visitsList.innerHTML = '<p>Brak wizyt</p>';
+            }
+
             patientDetails.style.display = 'block';
             noPatient.style.display = 'none';
         }
+
+        // Funkcja do wyświetlania listy wszystkich pacjentów
+        function displayAllPatients(patients) {
+            if (!patients || patients.length === 0) {
+                patientsTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Brak pacjentów</td></tr>';
+                return;
+            }
+
+            let tableHTML = '';
+
+            patients.forEach(patient => {
+                tableHTML += `
+                    <tr>
+                        <td>${patient.id}</td>
+                        <td>${patient.firstName} ${patient.lastName}</td>
+                        <td>${patient.patientNumber || 'Brak'}</td>
+                        <td>${patient.telephoneNumber || 'Brak'}</td>
+                        <td>${patient.email || 'Brak'}</td>
+                        <td>
+                            <div class="action-icons">
+                                <div class="action-icon view-icon" data-id="${patient.id}" data-action="view">👁️</div>
+                                <div class="action-icon edit-icon" data-id="${patient.id}" data-action="edit">✏️</div>
+                                <div class="action-icon delete-icon" data-id="${patient.id}" data-action="delete">🗑️</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            patientsTableBody.innerHTML = tableHTML;
+
+            // Dodanie obsługi akcji
+            const actionIcons = document.querySelectorAll('.action-icon');
+            actionIcons.forEach(icon => {
+                icon.addEventListener('click', handlePatientAction);
+            });
+        }
+
+        // Funkcja do obsługi akcji na pacjencie (podgląd, edycja, usunięcie)
+        function handlePatientAction(event) {
+            const patientId = event.target.dataset.id;
+            const action = event.target.dataset.action;
+
+            switch (action) {
+                case 'view':
+                    // Przejście do zakładki wyszukiwania i wyświetlenie pacjenta
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    document.querySelector('[data-tab="find-patient"]').classList.add('active');
+                    document.getElementById('find-patient').classList.add('active');
+
+                    patientIdInput.value = patientId;
+                    findBtn.click();
+                    break;
+                case 'edit':
+                    // Wczytanie pacjenta do formularza edycji i przejście do zakładki edycji
+                    loadPatientForEdit(patientId);
+                    break;
+                case 'delete':
+                    // Potwierdzenie usunięcia pacjenta
+                    confirmDelete(patientId, 'list');
+                    break;
+            }
+        }
+
+        // Funkcja do wczytywania pacjenta do formularza edycji
+        async function loadPatientForEdit(id) {
+            const patient = await fetchPatient(id);
+
+            if (patient) {
+                // Wypełnienie formularza danymi
+                fillEditForm(patient);
+
+                // Przejście do zakładki edycji
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+
+                document.querySelector('[data-tab="edit-patient"]').classList.add('active');
+                document.getElementById('edit-patient').classList.add('active');
+            }
+        }
+
+        // Funkcja do wypełniania formularza edycji danymi pacjenta
+        function fillEditForm(patient) {
+            document.getElementById('edit-id').value = patient.id;
+            document.getElementById('edit-firstname').value = patient.firstName || '';
+            document.getElementById('edit-lastname').value = patient.lastName || '';
+            document.getElementById('edit-dob').value = formatDateForInput(patient.dateOfBirth) || '';
+            document.getElementById('edit-register-date').value = formatDateForInput(patient.dateOfRegister) || '';
+            document.getElementById('edit-patient-number').value = patient.patientNumber || '';
+            document.getElementById('edit-phone').value = patient.telephoneNumber || '';
+            document.getElementById('edit-email').value = patient.email || '';
+
+            if (patient.address) {
+                document.getElementById('edit-address-id').value = patient.address.id || '';
+                document.getElementById('edit-city').value = patient.address.city || '';
+                document.getElementById('edit-postal-code').value = patient.address.postalCode || '';
+                document.getElementById('edit-address1').value = patient.address.addressLine1 || '';
+                document.getElementById('edit-address2').value = patient.address.addressLine2 || '';
+            }
+        }
+
+        // Funkcja do pobrania i wyświetlenia wszystkich pacjentów
+        async function loadAllPatients() {
+            const patients = await fetchAllPatients();
+            displayAllPatients(patients);
+        }
+
+        // ======================================================
+        // OBSŁUGA MODAL POTWIERDZENIA
+        // ======================================================
+
+        // Funkcja do wyświetlania modalu potwierdzenia
+        function showConfirmModal(message, callback) {
+            confirmMessage.textContent = message;
+            confirmCallback = callback;
+            confirmModal.classList.add('active');
+        }
+
+        // Funkcja do ukrywania modalu potwierdzenia
+        function hideConfirmModal() {
+            confirmModal.classList.remove('active');
+            confirmCallback = null;
+        }
+
+        // Obsługa przycisku "Tak" w modalu potwierdzenia
+        confirmYesBtn.addEventListener('click', () => {
+            if (confirmCallback) {
+                confirmCallback();
+            }
+            hideConfirmModal();
+        });
+
+        // Obsługa przycisku "Nie" w modalu potwierdzenia
+        confirmNoBtn.addEventListener('click', () => {
+            hideConfirmModal();
+        });
+
+        // Funkcja do potwierdzenia usunięcia pacjenta
+        function confirmDelete(id, source = 'search') {
+            showConfirmModal(`Czy na pewno chcesz usunąć pacjenta o ID ${id}?`, async () => {
+                const success = await deletePatient(id);
+
+                if (success) {
+                    if (source === 'search') {
+                        displayPatientDetails(null);
+                        patientIdInput.value = '';
+                        showMessage(messageSearch, 'Pacjent został pomyślnie usunięty', 'success');
+                    } else if (source === 'list') {
+                        loadAllPatients();
+                        showMessage(messageList, 'Pacjent został pomyślnie usunięty', 'success');
+                    }
+                }
+            });
+        }
+
+        // ======================================================
+        // OBSŁUGA ZDARZEŃ
+        // ======================================================
 
         // Obsługa kliknięcia przycisku "Znajdź pacjenta"
         findBtn.addEventListener('click', async () => {
             const patientId = patientIdInput.value.trim();
 
             if (!patientId) {
-                showMessage('Wprowadź ID pacjenta', 'error');
+                showMessage(messageSearch, 'Wprowadź ID pacjenta', 'error');
                 return;
             }
 
@@ -420,29 +1286,127 @@
 
             if (patient) {
                 displayPatientDetails(patient);
-                showMessage('Dane pacjenta zostały pobrane', 'success');
+                showMessage(messageSearch, 'Dane pacjenta zostały pobrane', 'success');
             } else {
                 displayPatientDetails(null);
             }
         });
 
         // Obsługa kliknięcia przycisku "Usuń pacjenta"
-        deleteBtn.addEventListener('click', async () => {
+        deleteBtn.addEventListener('click', () => {
             const patientId = patientIdInput.value.trim();
 
             if (!patientId) {
-                showMessage('Wprowadź ID pacjenta', 'error');
+                showMessage(messageSearch, 'Wprowadź ID pacjenta', 'error');
                 return;
             }
 
-            if (confirm(`Czy na pewno chcesz usunąć pacjenta o ID ${patientId}?`)) {
-                const success = await deletePatient(patientId);
+            confirmDelete(patientId);
+        });
 
-                if (success) {
-                    displayPatientDetails(null);
-                    showMessage('Pacjent został pomyślnie usunięty', 'success');
+        // Obsługa kliknięcia przycisku "Edytuj pacjenta" na szczegółach pacjenta
+        editThisPatientBtn.addEventListener('click', () => {
+            if (currentPatient) {
+                fillEditForm(currentPatient);
+
+                // Przejście do zakładki edycji
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+
+                document.querySelector('[data-tab="edit-patient"]').classList.add('active');
+                document.getElementById('edit-patient').classList.add('active');
+            }
+        });
+
+        // Obsługa formularza dodawania pacjenta
+        addPatientForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // Pobranie danych z formularza
+            const formData = new FormData(addPatientForm);
+            const patientData = {
+                address: {}
+            };
+
+            // Konwersja FormData na obiekt pacjenta
+            for (const [key, value] of formData.entries()) {
+                if (key.startsWith('address.')) {
+                    const addressKey = key.replace('address.', '');
+                    patientData.address[addressKey] = value;
+                } else {
+                    patientData[key] = value;
                 }
             }
+
+            // Dodawanie pacjenta
+            const newPatient = await createPatient(patientData);
+
+            if (newPatient) {
+                addPatientForm.reset();
+                showMessage(messageAdd, 'Pacjent został pomyślnie dodany', 'success');
+
+                // Przejście do szczegółów nowego pacjenta
+                setTimeout(() => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    document.querySelector('[data-tab="find-patient"]').classList.add('active');
+                    document.getElementById('find-patient').classList.add('active');
+
+                    patientIdInput.value = newPatient.id;
+                    findBtn.click();
+                }, 1000);
+            }
+        });
+
+        // Obsługa formularza edycji pacjenta
+        editPatientForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            // Pobranie danych z formularza
+            const formData = new FormData(editPatientForm);
+            const patientId = formData.get('id');
+            const patientData = {
+                address: {}
+            };
+
+            // Konwersja FormData na obiekt pacjenta
+            for (const [key, value] of formData.entries()) {
+                if (key.startsWith('address.')) {
+                    const addressKey = key.replace('address.', '');
+                    patientData.address[addressKey] = value;
+                } else {
+                    patientData[key] = value;
+                }
+            }
+
+            // Aktualizacja pacjenta
+            const updatedPatient = await updatePatient(patientId, patientData);
+
+            if (updatedPatient) {
+                showMessage(messageEdit, 'Pacjent został pomyślnie zaktualizowany', 'success');
+
+                // Przejście do szczegółów zaktualizowanego pacjenta
+                setTimeout(() => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+
+                    document.querySelector('[data-tab="find-patient"]').classList.add('active');
+                    document.getElementById('find-patient').classList.add('active');
+
+                    patientIdInput.value = updatedPatient.id;
+                    findBtn.click();
+                }, 1000);
+            }
+        });
+
+        // Obsługa przycisku anulowania edycji
+        cancelEditBtn.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            document.querySelector('[data-tab="find-patient"]').classList.add('active');
+            document.getElementById('find-patient').classList.add('active');
         });
     });
 </script>

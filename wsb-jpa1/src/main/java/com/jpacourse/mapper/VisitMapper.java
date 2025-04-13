@@ -8,8 +8,11 @@ import java.util.List;
 
 public class VisitMapper {
     public static List<VisitTO> mapToTO(List<VisitEntity> visitEntityList) {
-
         List<VisitTO> visitList = new ArrayList<>();
+
+        if (visitEntityList == null) {
+            return visitList; // Zwracamy pustą listę zamiast rzucać wyjątek
+        }
 
         for(VisitEntity visitEntity: visitEntityList) {
             VisitTO visit = new VisitTO();
@@ -18,7 +21,6 @@ public class VisitMapper {
             visit.setMedicalTreatment(MedicalTreatmentMapper.mapToTO(visitEntity.getMedicalTreatmentEntityList()));
             visitList.add(visit);
         }
-
 
         return visitList;
     }
