@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System zarządzania pacjentami</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .sidebar {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-right: 1px solid #ddd;
+        }
+
+        .content {
+            flex: 2;
+            min-width: 300px;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .primary-btn {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .primary-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .danger-btn {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .danger-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .patient-details {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .patient-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .patient-card h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .patient-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-group {
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: var(--dark-color);
+            font-size: 14px;
+        }
+
+        .info-value {
+            margin-top: 5px;
+            color: #333;
+        }
+
+        .address-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>System zarządzania pacjentami</h1>
+    </header>
+
+    <div class="main-content">
+        <div class="sidebar">
+            <h2>Wyszukaj pacjenta</h2>
+            <div class="form-group">
+                <label for="patient-id">ID pacjenta:</label>
+                <input type="number" id="patient-id" min="1" placeholder="Wprowadź ID pacjenta">
+            </div>
+
+            <div class="button-group">
+                <button id="find-btn" class="primary-btn">Znajdź pacjenta</button>
+                <button id="delete-btn" class="danger-btn">Usuń pacjenta</button>
+            </div>
+
+            <div id="message" class="message hidden"></div>
+        </div>
+
+        <div class="content">
+            <h2>Szczegóły pacjenta</h2>
+            <p id="no-patient">Wprowadź ID pacjenta i kliknij "Znajdź pacjenta", aby wyświetlić szczegóły.</p>
+
+            <div id="patient-details" class="patient-details">
+                <div class="patient-card">
+                    <h3 id="patient-name">Dane pacjenta</h3>
+
+                    <div class="patient-info">
+                        <div class="info-group">
+                            <div class="info-label">Imię:</div>
+                            <div id="patient-firstname" class="info-value"></div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Nazwisko:</div>
+                            <div id="patient-lastname" class="info-value"></div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Numer telefonu:</div>
+                            <div id="patient-phone" class="info-value"></div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Email:</div>
+                            <div id="patient-email" class="info-value"></div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Numer pacjenta:</div>
+                            <div id="patient-number" class="info-value"></div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Data urodzenia:</div>
+                            <div id="patient-dob" class="info-value"></div>
+                        </div>
+                    </div>
+
+                    <div class="address-section">
+                        <h4>Adres:</h4>
+                        <div class="patient-info">
+                            <div class="info-group">
+                                <div class="info-label">Miasto:</div>
+                                <div id="patient-city" class="info-value"></div>
+                            </div>
+
+                            <div class="info-group">
+                                <div class="info-label">Kod pocztowy:</div>
+                                <div id="patient-postalcode" class="info-value"></div>
+                            </div>
+
+                            <div class="info-group">
+                                <div class="info-label">Adres (linia 1):</div>
+                                <div id="patient-address1" class="info-value"></div>
+                            </div>
+
+                            <div class="info-group">
+                                <div class="info-label">Adres (linia 2):</div>
+                                <div id="patient-address2" class="info-value"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Referencje do elementów DOM
+        const patientIdInput = document.getElementById('patient-id');
+        const findBtn = document.getElementById('find-btn');
+        const deleteBtn = document.getElementById('delete-btn');
+        const patientDetails = document.getElementById('patient-details');
+        const noPatient = document.getElementById('no-patient');
+        const messageDiv = document.getElementById('message');
+
+        // Elementy danych pacjenta
+        const patientName = document.getElementById('patient-name');
+        const patientFirstname = document.getElementById('patient-firstname');
+        const patientLastname = document.getElementById('patient-lastname');
+        const patientPhone = document.getElementById('patient-phone');
+        const patientEmail = document.getElementById('patient-email');
+        const patientNumber = document.getElementById('patient-number');
+        const patientDob = document.getElementById('patient-dob');
+        const patientCity = document.getElementById('patient-city');
+        const patientPostalcode = document.getElementById('patient-postalcode');
+        const patientAddress1 = document.getElementById('patient-address1');
+        const patientAddress2 = document.getElementById('patient-address2');
+
+        // Funkcja do wyświetlania wiadomości
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.classList.remove('hidden');
+
+            // Ukryj wiadomość po 5 sekundach
+            setTimeout(() => {
+                messageDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Funkcja do formatowania daty
+        function formatDate(dateString) {
+            if (!dateString) return 'Brak danych';
+
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pl-PL', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+        // Funkcja do pobierania pacjenta
+        async function fetchPatient(id) {
+            try {
+                const response = await fetch(`http://localhost:8091/patient/${id}`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Pacjent o podanym ID nie został znaleziony');
+                    }
+                    throw new Error('Wystąpił błąd podczas pobierania danych pacjenta');
+                }
+
+                return await response.json();
+            } catch (error) {
+                showMessage(error.message || 'Błąd CORS: Serwer nie zezwala na dostęp z tej strony', 'error');
+                return null;
+            }
+        }
+
+        // Funkcja do usuwania pacjenta
+        async function deletePatient(id) {
+            try {
+                const response = await fetch(`http://localhost:8091/patient/${id}`, {
+                    method: 'DELETE',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error('Pacjent o podanym ID nie został znaleziony');
+                    }
+                    throw new Error('Wystąpił błąd podczas usuwania pacjenta');
+                }
+
+                return true;
+            } catch (error) {
+                showMessage(error.message, 'error');
+                return false;
+            }
+        }
+
+        // Funkcja do wyświetlania danych pacjenta
+        function displayPatientDetails(patient) {
+            if (!patient) {
+                patientDetails.style.display = 'none';
+                noPatient.style.display = 'block';
+                return;
+            }
+
+            patientName.textContent = `${patient.firstName} ${patient.lastName}`;
+            patientFirstname.textContent = patient.firstName || 'Brak danych';
+            patientLastname.textContent = patient.lastName || 'Brak danych';
+            patientPhone.textContent = patient.telephoneNumber || 'Brak danych';
+            patientEmail.textContent = patient.email || 'Brak danych';
+            patientNumber.textContent = patient.patientNumber || 'Brak danych';
+            patientDob.textContent = formatDate(patient.dateOfBirth);
+
+            // Dane adresowe
+            if (patient.address) {
+                patientCity.textContent = patient.address.city || 'Brak danych';
+                patientPostalcode.textContent = patient.address.postalCode || 'Brak danych';
+                patientAddress1.textContent = patient.address.addressLine1 || 'Brak danych';
+                patientAddress2.textContent = patient.address.addressLine2 || 'Brak danych';
+            } else {
+                patientCity.textContent = 'Brak danych';
+                patientPostalcode.textContent = 'Brak danych';
+                patientAddress1.textContent = 'Brak danych';
+                patientAddress2.textContent = 'Brak danych';
+            }
+
+            patientDetails.style.display = 'block';
+            noPatient.style.display = 'none';
+        }
+
+        // Obsługa kliknięcia przycisku "Znajdź pacjenta"
+        findBtn.addEventListener('click', async () => {
+            const patientId = patientIdInput.value.trim();
+
+            if (!patientId) {
+                showMessage('Wprowadź ID pacjenta', 'error');
+                return;
+            }
+
+            const patient = await fetchPatient(patientId);
+
+            if (patient) {
+                displayPatientDetails(patient);
+                showMessage('Dane pacjenta zostały pobrane', 'success');
+            } else {
+                displayPatientDetails(null);
+            }
+        });
+
+        // Obsługa kliknięcia przycisku "Usuń pacjenta"
+        deleteBtn.addEventListener('click', async () => {
+            const patientId = patientIdInput.value.trim();
+
+            if (!patientId) {
+                showMessage('Wprowadź ID pacjenta', 'error');
+                return;
+            }
+
+            if (confirm(`Czy na pewno chcesz usunąć pacjenta o ID ${patientId}?`)) {
+                const success = await deletePatient(patientId);
+
+                if (success) {
+                    displayPatientDetails(null);
+                    showMessage('Pacjent został pomyślnie usunięty', 'success');
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
