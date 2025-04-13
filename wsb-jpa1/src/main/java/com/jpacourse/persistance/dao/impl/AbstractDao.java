@@ -6,6 +6,7 @@ import java.util.List;
 
 
 import com.jpacourse.persistance.dao.Dao;
+import com.jpacourse.rest.exception.EntityNotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Transactional
-public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K> {
+public abstract class AbstractDao<T, ID extends Serializable> implements Dao<T, ID> {
 
 	@PersistenceContext
 	protected EntityManager entityManager;
@@ -29,12 +30,12 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
 	}
 
 	@Override
-	public T getOne(K id) {
+	public T getOne(ID id) {
 		return entityManager.getReference(getDomainClass(), id);
 	}
 
 	@Override
-	public T findOne(K id) {
+	public T findOne(ID id) {
 		return entityManager.find(getDomainClass(), id);
 	}
 
@@ -58,7 +59,7 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
 	}
 
 	@Override
-	public void delete(K id) {
+	public void delete(ID id) {
 		entityManager.remove(getOne(id));
 	}
 
@@ -73,7 +74,7 @@ public abstract class AbstractDao<T, K extends Serializable> implements Dao<T, K
 	}
 
 	@Override
-	public boolean exists(K id) {
+	public boolean exists(ID id) {
 		return findOne(id) != null;
 	}
 

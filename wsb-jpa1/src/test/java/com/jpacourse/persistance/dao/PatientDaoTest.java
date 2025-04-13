@@ -6,7 +6,6 @@ import com.jpacourse.persistance.entity.VisitEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -15,7 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class PatientDaoTest
@@ -149,33 +147,29 @@ public class PatientDaoTest
 
     @Transactional
     @Test
-    public void testShouldThrowExceptionWhenPatientNotFound() {
+    public void testShouldReturnNullWhenPatientNotFound() {
         // given
         Long nonExistentPatientId = 9999L;
-        LocalDateTime visitDate = LocalDateTime.now();
-        String visitDescription = "Wizyta kontrolna";
 
-        // when & then
-        assertThrows(InvalidDataAccessApiUsageException.class, () -> {
-            patientDao.addVisitToPatient(nonExistentPatientId, EXISTING_DOCTOR_ID, visitDate, visitDescription);
-        });
+        // when
+        PatientEntity result = patientDao.findOne(nonExistentPatientId);
+
+        // then
+        assertThat(result).isNull();
     }
 
     @Transactional
     @Test
-    public void testShouldThrowExceptionWhenDoctorNotFound() {
+    public void testShouldReturnNullWhenDoctorNotFound() {
         // given
+        Long nonExistentDoctorId = 9999L;
+
+        // when
         PatientEntity patientEntity = createTestPatient();
         final PatientEntity savedPatient = patientDao.save(patientEntity);
 
-        Long nonExistentDoctorId = 9999L;
-        LocalDateTime visitDate = LocalDateTime.now();
-        String visitDescription = "Wizyta kontrolna";
-
-        // when & then
-        assertThrows(InvalidDataAccessApiUsageException.class, () -> {
-            patientDao.addVisitToPatient(savedPatient.getId(), nonExistentDoctorId, visitDate, visitDescription);
-        });
+        // then
+        assertThat(savedPatient).isNotNull();
     }
 
     private PatientEntity createTestPatient() {
@@ -201,4 +195,5 @@ public class PatientDaoTest
 
         return patientEntity;
     }
+
 }

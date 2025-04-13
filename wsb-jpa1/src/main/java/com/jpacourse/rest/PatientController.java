@@ -11,15 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PatientController {
     private final PatientService patientService;
-    public PatientController(PatientService patientService){this.patientService = patientService;}
+
+    public PatientController(PatientService patientService) {
+        this.patientService = patientService;
+    }
 
     @GetMapping("/patient/{id}")
     public PatientTO findById(@PathVariable final long id) {
-        final PatientTO patientTO = patientService.findById(id);
-
-        if(patientTO != null) return patientTO;
-
-        throw new EntityNotFoundException(id);
+        return patientService.findById(id);
     }
 
     @DeleteMapping("/patient/{id}")
