@@ -78,4 +78,5 @@ public class VisitEntity {
 	public void setPatient(PatientEntity patient) {
 		this.patient = patient;
 	}
+
 }

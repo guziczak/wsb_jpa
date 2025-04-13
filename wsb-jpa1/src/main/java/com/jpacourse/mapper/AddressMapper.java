@@ -3,13 +3,10 @@ package com.jpacourse.mapper;
 import com.jpacourse.dto.AddressTO;
 import com.jpacourse.persistance.entity.AddressEntity;
 
-public final class AddressMapper
-{
+public final class AddressMapper {
 
-    public static AddressTO mapToTO(final AddressEntity addressEntity)
-    {
-        if (addressEntity == null)
-        {
+    public static AddressTO mapToTO(final AddressEntity addressEntity) {
+        if (addressEntity == null) {
             return null;
         }
         final AddressTO addressTO = new AddressTO();
@@ -21,10 +18,8 @@ public final class AddressMapper
         return addressTO;
     }
 
-    public static AddressEntity mapToEntity(final AddressTO addressTO)
-    {
-        if(addressTO == null)
-        {
+    public static AddressEntity mapToEntity(final AddressTO addressTO) {
+        if(addressTO == null) {
             return null;
         }
         AddressEntity addressEntity = new AddressEntity();
@@ -35,4 +30,5 @@ public final class AddressMapper
         addressEntity.setPostalCode(addressTO.getPostalCode());
         return addressEntity;
     }
+
 }

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class VisitTO implements Serializable {
-
     private LocalDateTime time;
     private DoctorTO doctor;
     private List<MedicalTreatmentTO> medicalTreatment;
@@ -33,4 +32,5 @@ public class VisitTO implements Serializable {
     public void setMedicalTreatment(List<MedicalTreatmentTO> medicalTreatment) {
         this.medicalTreatment = medicalTreatment;
     }
+
 }
