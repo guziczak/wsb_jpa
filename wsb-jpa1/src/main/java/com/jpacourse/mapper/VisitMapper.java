@@ -14,7 +14,7 @@ public class VisitMapper {
             return visitList; // Zwracamy pustą listę zamiast rzucać wyjątek
         }
 
-        for(VisitEntity visitEntity: visitEntityList) {
+        for (VisitEntity visitEntity : visitEntityList) {
             VisitTO visit = new VisitTO();
             visit.setTime(visitEntity.getTime());
             visit.setDoctor(DoctorMapper.mapToTO(visitEntity.getDoctorEntity()));
@@ -23,5 +23,14 @@ public class VisitMapper {
         }
 
         return visitList;
+    }
+
+    public static VisitTO mapToTO(VisitEntity visitEntity) {
+        VisitTO visit = new VisitTO();
+        visit.setTime(visitEntity.getTime());
+        visit.setDoctor(DoctorMapper.mapToTO(visitEntity.getDoctorEntity()));
+        visit.setMedicalTreatment(MedicalTreatmentMapper.mapToTO(visitEntity.getMedicalTreatmentEntityList()));
+
+        return visit;
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,16 @@ public class PatientServiceImpl extends AbstractService<PatientTO, PatientEntity
     @Override
     public void deleteById(Long id) {
         patientDao.delete(id);
+    }
+
+    @Override
+    public List<PatientTO> findByLastName(String lastName) {
+        List<PatientEntity> patientsByLastName = patientDao.findPatientsByLastName(lastName);
+        List<PatientTO> resultPatientList = new ArrayList<>();
+        patientsByLastName.forEach(p ->
+            resultPatientList.add(PatientMapper.mapToTO(p))
+        );
+        return resultPatientList;
     }
 
     @Override

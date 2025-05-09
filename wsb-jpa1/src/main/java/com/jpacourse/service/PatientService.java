@@ -14,4 +14,6 @@ public interface PatientService {
     PatientTO update(final PatientTO patientTO);
 
     void deleteById(final Long id);
+
+    List<PatientTO> findByLastName(final String lastName);
 }

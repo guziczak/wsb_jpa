@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements PatientDao {
@@ -33,5 +34,13 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
         visit.setPatient(patientEntity);
 
         entityManager.merge(patientEntity);
+    }
+
+    @Override
+    public List<PatientEntity> findPatientsByLastName(String lastName) {
+        return entityManager
+                .createQuery("SELECT p FROM PatientEntity p WHERE p.lastName = :lastName", PatientEntity.class)
+                .setParameter("lastName", lastName)
+                .getResultList();
     }
 }

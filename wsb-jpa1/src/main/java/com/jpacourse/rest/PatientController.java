@@ -27,6 +27,11 @@ public class PatientController {
         return patientService.findAll();
     }
 
+    @GetMapping("/patients/by-last-name/{lastName}")
+    public List<PatientTO> findByLastName(@PathVariable final String lastName) {
+        return patientService.findByLastName(lastName);
+    }
+
     @PostMapping("/patient")
     public ResponseEntity<PatientTO> createPatient(@RequestBody final PatientTO patientTO) {
         PatientTO savedPatient = patientService.save(patientTO);
