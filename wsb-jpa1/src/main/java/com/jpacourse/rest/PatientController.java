@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -30,6 +31,16 @@ public class PatientController {
     @GetMapping("/patients/by-last-name/{lastName}")
     public List<PatientTO> findByLastName(@PathVariable final String lastName) {
         return patientService.findByLastName(lastName);
+    }
+
+    @GetMapping("/patients/find-where-visits-is-greater-than/{numberOfVisits}")
+    public List<PatientTO> findByLastName(@PathVariable int numberOfVisits) {
+        return patientService.findPatientWhereVisitIsMoreThan(numberOfVisits);
+    }
+
+    @GetMapping("/patients/find-where-date-of-register-is-later-than/{date}")
+    public List<PatientTO> findPatientWhereDateOfRegisterIsLaterThan(@PathVariable LocalDate date) {
+        return patientService.findPatientWhereDateOfRegisterIsLaterThan(date);
     }
 
     @PostMapping("/patient")

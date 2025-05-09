@@ -3,7 +3,19 @@ package com.jpacourse.mapper;
 import com.jpacourse.dto.PatientTO;
 import com.jpacourse.persistance.entity.PatientEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PatientMapper {
+    public static List<PatientTO> mapToTO(final List<PatientEntity> patientEntityList) {
+        List<PatientTO> resultPatientList = new ArrayList<>();
+        patientEntityList.forEach(p ->
+                resultPatientList.add(mapToTO(p))
+        );
+
+        return resultPatientList;
+    }
+
     public static PatientTO mapToTO(final PatientEntity patientEntity) {
         if (patientEntity == null)
         {

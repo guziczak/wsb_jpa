@@ -8,6 +8,7 @@ import com.jpacourse.rest.exception.EntityNotFoundException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -41,6 +42,22 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
         return entityManager
                 .createQuery("SELECT p FROM PatientEntity p WHERE p.lastName = :lastName", PatientEntity.class)
                 .setParameter("lastName", lastName)
+                .getResultList();
+    }
+
+    @Override
+    public List<PatientEntity> findPatientWhereVisitIsMoreThan(int numberOfVisits) {
+        return entityManager
+                .createQuery("SELECT p FROM PatientEntity p WHERE SIZE(p.visitEntityList) > :numberOfVisits")
+                .setParameter("numberOfVisits", numberOfVisits)
+                .getResultList();
+    }
+
+    @Override
+    public List<PatientEntity> findPatientWhereDateOfRegisterIsLaterThan(LocalDate date) {
+        return entityManager
+                .createQuery("SELECT p FROM PatientEntity p WHERE p.dateOfRegister > :date")
+                .setParameter("date", date)
                 .getResultList();
     }
 }

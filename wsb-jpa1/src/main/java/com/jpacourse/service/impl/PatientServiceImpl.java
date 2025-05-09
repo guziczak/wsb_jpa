@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,12 +41,7 @@ public class PatientServiceImpl extends AbstractService<PatientTO, PatientEntity
 
     @Override
     public List<PatientTO> findByLastName(String lastName) {
-        List<PatientEntity> patientsByLastName = patientDao.findPatientsByLastName(lastName);
-        List<PatientTO> resultPatientList = new ArrayList<>();
-        patientsByLastName.forEach(p ->
-            resultPatientList.add(PatientMapper.mapToTO(p))
-        );
-        return resultPatientList;
+        return PatientMapper.mapToTO(patientDao.findPatientsByLastName(lastName));
     }
 
     @Override
@@ -55,6 +50,16 @@ public class PatientServiceImpl extends AbstractService<PatientTO, PatientEntity
         return entities.stream()
                 .map(PatientMapper::mapToTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PatientTO> findPatientWhereVisitIsMoreThan(int numberOfVisits) {
+        return PatientMapper.mapToTO(patientDao.findPatientWhereVisitIsMoreThan(numberOfVisits));
+    }
+
+    @Override
+    public List<PatientTO> findPatientWhereDateOfRegisterIsLaterThan(LocalDate date) {
+        return PatientMapper.mapToTO(patientDao.findPatientWhereDateOfRegisterIsLaterThan(date));
     }
 
     @Override

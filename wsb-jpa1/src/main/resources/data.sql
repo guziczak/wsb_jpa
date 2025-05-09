@@ -26,13 +26,13 @@ INSERT INTO DOCTOR (firstName, lastName, telephoneNumber, email, doctorNumber, s
 ('Tomasz', 'Mazur', '555666777', 't.mazur@example.com', 'D127', 'SURGEON', 5),
 ('Karolina', 'Zawadzka', '666777888', 'karolina.z@example.com', 'D128', 'GP', 6);
 
-INSERT INTO PATIENT (firstName, lastName, telephoneNumber, email, patientNumber, dateOfBirth, address_id) VALUES
-('Marek', 'Lewandowski', '111222333', 'marek.l@example.com', 'P001', '1985-06-15', 7),
-('Ewa', 'Kwiatkowska', '444555666', 'ewa.k@example.com', 'P002', '1990-01-20', 8),
-('Tomasz', 'Kaczmarek', '555666777', 'tomasz.k@example.com', 'P003', '1978-09-05', 9),
-('Natalia', 'Grabowska', '777888999', 'natalia.g@example.com', 'P004', '1995-12-12', 10),
-('Jan', 'Lewandowski', '888999000', 'jan.l@example.com', 'P005', '1980-03-30', 1),
-('Katarzyna', 'Kaczmarek', '999000111', 'k.k@example.com', 'P006', '1988-07-22', 2);
+INSERT INTO PATIENT (firstName, lastName, telephoneNumber, email, patientNumber, dateOfBirth, address_id, date_of_register) VALUES
+('Marek', 'Lewandowski', '111222333', 'marek.l@example.com', 'P001', '1985-06-15', 7, '2000-06-15'),
+('Ewa', 'Kwiatkowska', '444555666', 'ewa.k@example.com', 'P002', '1990-01-20', 8, '2005-01-20'),
+('Tomasz', 'Kaczmarek', '555666777', 'tomasz.k@example.com', 'P003', '1978-09-05', 9, '2003-09-05'),
+('Natalia', 'Grabowska', '777888999', 'natalia.g@example.com', 'P004', '1995-12-12', 10, '2010-12-12'),
+('Jan', 'Lewandowski', '888999000', 'jan.l@example.com', 'P005', '1980-03-30', 1, '2008-03-30'),
+('Katarzyna', 'Kaczmarek', '999000111', 'k.k@example.com', 'P006', '1988-07-22', 2, '1999-07-22');
 
 
 INSERT INTO VISIT (description, time, doctor_id, patient_id) VALUES
