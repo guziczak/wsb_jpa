@@ -3,7 +3,7 @@ package com.jpacourse.persistance.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "ADDRESS")
+@Table(name = "address")
 public class AddressEntity {
 
 	@Id
@@ -12,12 +12,13 @@ public class AddressEntity {
 
 	private String city;
 
-	@Column(name = "ADDRESSLINE1")
+	@Column(name = "addressline1")
 	private String addressLine1;
 
-	@Column(name = "ADDRESSLINE2")
+	@Column(name = "addressline2")
 	private String addressLine2;
-	@Column(name = "POSTALCODE")
+
+	@Column(name = "postalcode")
 	private String postalCode;
 
 	@OneToOne(mappedBy = "address")

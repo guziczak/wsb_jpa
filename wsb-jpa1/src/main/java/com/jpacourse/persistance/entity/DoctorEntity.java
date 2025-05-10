@@ -4,26 +4,26 @@ import com.jpacourse.persistance.enums.Specialization;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "DOCTOR")
+@Table(name = "doctor")
 public class DoctorEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name= "FIRSTNAME", nullable = false)
+	@Column(name = "firstname", nullable = false)
 	private String firstName;
 
-	@Column(name= "LASTNAME", nullable = false)
+	@Column(name = "lastname", nullable = false)
 	private String lastName;
 
-	@Column(name= "TELEPHONENUMBER", nullable = false)
+	@Column(name = "telephonenumber", nullable = false)
 	private String telephoneNumber;
 
-	@Column(name= "EMAIL", nullable = false)
+	@Column(name = "email", nullable = false)
 	private String email;
 
-	@Column(name= "DOCTORNUMBER", nullable = false)
+	@Column(name = "doctornumber", nullable = false)
 	private String doctorNumber;
 
 	@Column(nullable = false)
@@ -31,7 +31,7 @@ public class DoctorEntity {
 	private Specialization specialization;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "address_id", referencedColumnName = "id", unique = true)
+	@JoinColumn(name = "address_id", unique = true)
 	private AddressEntity address;
 
 	// Gettery i settery

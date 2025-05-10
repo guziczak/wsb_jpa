@@ -8,38 +8,38 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 @Entity
-@Table(name = "PATIENT")
+@Table(name = "patient")
 public class PatientEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "FIRSTNAME", nullable = false)
+	@Column(name = "firstname", nullable = false)
 	private String firstName;
 
-	@Column(name = "LASTNAME", nullable = false)
+	@Column(name = "lastname", nullable = false)
 	private String lastName;
 
-	@Column(name = "TELEPHONENUMBER", nullable = false)
+	@Column(name = "telephonenumber", nullable = false)
 	private String telephoneNumber;
 
 	private String email;
 
-	@Column(name = "PATIENTNUMBER", nullable = false)
+	@Column(name = "patientnumber", nullable = false)
 	private String patientNumber;
 
-	@Column(name = "DATEOFBIRTH", nullable = false)
+	@Column(name = "dateofbirth", nullable = false)
 	private LocalDate dateOfBirth;
 
-	@Column(name = "DATE_OF_REGISTER")
+	@Column(name = "date_of_register")
 	private LocalDate dateOfRegister;
 
 	@Version
 	private Long version;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "address_id", referencedColumnName = "id", unique = true)
+	@JoinColumn(name = "address_id", unique = true)
 	private AddressEntity address;
 
 	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
