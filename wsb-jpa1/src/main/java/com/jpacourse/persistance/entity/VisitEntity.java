@@ -6,28 +6,29 @@ import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "visit")
+@Table(name = "VISIT")
 public class VisitEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "description")
+	@Column(name = "DESCRIPTION")
 	private String description;
 
-	@Column(name = "time", nullable = false)
+	@Column(name = "TIME", nullable = false)
 	private LocalDateTime time;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "doctor_id")
+	@JoinColumn(name = "DOCTOR_ID", referencedColumnName = "ID")
 	private DoctorEntity doctor;
 
 	@ManyToOne()
-	@JoinColumn(name = "patient_id")
+	@JoinColumn(name = "PATIENT_ID")
 	private PatientEntity patient;
 
-	@OneToMany(mappedBy = "visit", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "VISIT_ID")
 	private List<MedicalTreatmentEntity> medicalTreatmentEntityList;
 
 	public Long getId() {
