@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 @Table(name = "PATIENT")
@@ -33,11 +35,15 @@ public class PatientEntity {
 	@Column(name = "DATE_OF_REGISTER")
 	private LocalDate dateOfRegister;
 
+	@Version
+	private Long version;
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id", referencedColumnName = "id", unique = true)
 	private AddressEntity address;
 
-	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
 	private List<VisitEntity> visitEntityList;
 
 	// Gettery i settery
@@ -120,5 +126,13 @@ public class PatientEntity {
 
 	public void setVisitEntityList(List<VisitEntity> visitEntityList) {
 		this.visitEntityList = visitEntityList;
+	}
+
+	public Long getVersion() {
+		return version;
+	}
+
+	public void setVersion(Long version) {
+		this.version = version;
 	}
 }

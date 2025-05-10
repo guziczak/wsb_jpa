@@ -17,7 +17,7 @@ public class VisitController {
     public VisitController(VisitService visitService) {this.visitService = visitService;}
 
     @GetMapping("/find-by-patientId/{patientId}")
-    public List<VisitTO> getAllVisitsByPatientId(@PathVariable final int patientId) {
+    public List<VisitTO> getAllVisitsByPatientId(@PathVariable final Long patientId) {
         return visitService.findByPatientId(patientId);
     }
 }

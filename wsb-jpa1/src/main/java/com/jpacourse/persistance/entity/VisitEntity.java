@@ -21,7 +21,7 @@ public class VisitEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "DOCTOR_ID", referencedColumnName = "ID")
-	private DoctorEntity doctorEntity;
+	private DoctorEntity doctor;
 
 	@ManyToOne()
 	@JoinColumn(name = "PATIENT_ID")
@@ -55,12 +55,12 @@ public class VisitEntity {
 		this.time = time;
 	}
 
-	public DoctorEntity getDoctorEntity() {
-		return doctorEntity;
+	public DoctorEntity getDoctor() {
+		return doctor;
 	}
 
-	public void setDoctorEntity(DoctorEntity doctorEntity) {
-		this.doctorEntity = doctorEntity;
+	public void setDoctor(DoctorEntity doctor) {
+		this.doctor = doctor;
 	}
 
 	public List<MedicalTreatmentEntity> getMedicalTreatmentEntityList() {

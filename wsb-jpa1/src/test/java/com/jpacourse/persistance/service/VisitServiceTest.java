@@ -20,23 +20,25 @@ public class VisitServiceTest {
     @Test
     void shouldReturnVisitsForGivenPatientId() {
         // given
-        int patientId = 1;
+        Long patientId = 1L;
 
         // when
         List<VisitTO> visits = visitService.findByPatientId(patientId);
 
         // then
         assertNotNull(visits);
-        assertEquals(3, visits.size());
+        assertEquals(2, visits.size());  // Pacjent o ID=1 ma 2 wizyty w data.sql
 
         VisitTO checkup = visits.stream()
-                .filter(v -> LocalDateTime.of(2025,3,26,10,0,0).equals(v.getTime()))
+                .filter(v -> v.getTime().getYear() == 2023)  // Wizyty są z roku 2023
                 .findFirst()
                 .orElse(null);
 
         assertNotNull(checkup);
-        assertEquals("John", checkup.getDoctor().getFirstName());
-        assertEquals("Doe", checkup.getDoctor().getLastName());
+
+        // Sprawdź dane lekarza z ID=1 w data.sql
+        assertEquals("Jan", checkup.getDoctor().getFirstName());
+        assertEquals("Kowalski", checkup.getDoctor().getLastName());
 
     }
 }

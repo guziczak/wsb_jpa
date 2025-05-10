@@ -34,7 +34,7 @@ public class PatientController {
     }
 
     @GetMapping("/patients/find-where-visits-is-greater-than/{numberOfVisits}")
-    public List<PatientTO> findByLastName(@PathVariable int numberOfVisits) {
+    public List<PatientTO> findPatientsWithMoreVisitsThan(@PathVariable int numberOfVisits) {
         return patientService.findPatientWhereVisitIsMoreThan(numberOfVisits);
     }
 

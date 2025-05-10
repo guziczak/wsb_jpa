@@ -35,45 +35,45 @@ public class PatientDaoTest
 
         // then
         assertThat(patient).isNotNull();
-        assertThat(patient.getFirstName()).isEqualTo("Marek");
-        assertThat(patient.getLastName()).isEqualTo("Lewandowski");
+        assertThat(patient.getFirstName()).isEqualTo("Adam");
+        assertThat(patient.getLastName()).isEqualTo("Kowalczyk");
         assertThat(patient.getTelephoneNumber()).isEqualTo("111222333");
-        assertThat(patient.getEmail()).isEqualTo("marek.l@example.com");
-        assertThat(patient.getPatientNumber()).isEqualTo("P001");
-        assertThat(patient.getDateOfBirth()).isEqualTo(LocalDate.of(1985, 6, 15));
+        assertThat(patient.getEmail()).isEqualTo("adam.kowalczyk@example.com");
+        assertThat(patient.getPatientNumber()).isEqualTo("PAT001");
+        assertThat(patient.getDateOfBirth()).isEqualTo(LocalDate.of(1985, 5, 15));
 
         assertThat(patient.getAddress()).isNotNull();
-        assertThat(patient.getAddress().getCity()).isEqualTo("Lublin");
-        assertThat(patient.getAddress().getAddressLine1()).isEqualTo("ul. Lipowa 3");
-        assertThat(patient.getAddress().getPostalCode()).isEqualTo("20-400");
+        assertThat(patient.getAddress().getCity()).isEqualTo("Warszawa");
+        assertThat(patient.getAddress().getAddressLine1()).isEqualTo("ul. Marszałkowska 123");
+        assertThat(patient.getAddress().getPostalCode()).isEqualTo("60-400");
 
         assertThat(patient.getVisitEntityList()).isNotNull();
-        assertThat(patient.getVisitEntityList().size()).isEqualTo(3);
+        assertThat(patient.getVisitEntityList().size()).isEqualTo(2);
 
         VisitEntity firstVisit = patient.getVisitEntityList().stream()
-                .filter(v -> v.getDescription().equals("Regular checkup"))
+                .filter(v -> v.getDescription().equals("Konsultacja kardiologiczna"))
                 .findFirst()
                 .orElse(null);
 
         assertThat(firstVisit).isNotNull();
         assertThat(firstVisit.getTime()).isEqualTo(
-                LocalDateTime.parse("2025-03-26 10:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        assertThat(firstVisit.getDoctorEntity()).isNotNull();
-        assertThat(firstVisit.getDoctorEntity().getFirstName()).isEqualTo("John");
-        assertThat(firstVisit.getDoctorEntity().getLastName()).isEqualTo("Doe");
-        assertThat(firstVisit.getDoctorEntity().getSpecialization().toString()).isEqualTo("SURGEON");
+                LocalDateTime.parse("2023-07-10 10:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        assertThat(firstVisit.getDoctor()).isNotNull();
+        assertThat(firstVisit.getDoctor().getFirstName()).isEqualTo("Jan");
+        assertThat(firstVisit.getDoctor().getLastName()).isEqualTo("Kowalski");
+        assertThat(firstVisit.getDoctor().getSpecialization().toString()).isEqualTo("CARDIOLOGIST");
 
         VisitEntity secondVisit = patient.getVisitEntityList().stream()
-                .filter(v -> v.getDescription().equals("Neurological consultation"))
+                .filter(v -> v.getDescription().equals("Kontrola kardiologiczna"))
                 .findFirst()
                 .orElse(null);
 
         assertThat(secondVisit).isNotNull();
         assertThat(secondVisit.getTime()).isEqualTo(
-                LocalDateTime.parse("2025-03-27 15:30:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        assertThat(secondVisit.getDoctorEntity()).isNotNull();
-        assertThat(secondVisit.getDoctorEntity().getFirstName()).isEqualTo("John");
-        assertThat(secondVisit.getDoctorEntity().getLastName()).isEqualTo("Doe");
+                LocalDateTime.parse("2023-08-10 10:00:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        assertThat(secondVisit.getDoctor()).isNotNull();
+        assertThat(secondVisit.getDoctor().getFirstName()).isEqualTo("Jan");
+        assertThat(secondVisit.getDoctor().getLastName()).isEqualTo("Kowalski");
     }
 
     @Transactional
@@ -136,7 +136,7 @@ public class PatientDaoTest
         VisitEntity lastVisit = updatedPatient.getVisitEntityList().get(updatedPatient.getVisitEntityList().size() - 1);
         assertThat(lastVisit.getDescription()).isEqualTo(visitDescription);
         assertThat(lastVisit.getTime()).isEqualTo(visitDate);
-        assertThat(lastVisit.getDoctorEntity().getId()).isEqualTo(EXISTING_DOCTOR_ID);
+        assertThat(lastVisit.getDoctor().getId()).isEqualTo(EXISTING_DOCTOR_ID);
         assertThat(lastVisit.getPatient().getId()).isEqualTo(savedPatient.getId());
     }
 
@@ -188,6 +188,7 @@ public class PatientDaoTest
 
     private PatientEntity createTestPatient() {
         PatientEntity patientEntity = new PatientEntity();
+        // Do NOT set an ID - let the database assign it
         patientEntity.setFirstName("Jan");
         patientEntity.setLastName("Testowy");
         patientEntity.setTelephoneNumber("123456789");
@@ -197,6 +198,7 @@ public class PatientDaoTest
         patientEntity.setDateOfRegister(LocalDate.now());
 
         AddressEntity addressEntity = new AddressEntity();
+        // Do NOT set an ID - let the database assign it
         addressEntity.setAddressLine1("ul. Testowa 1");
         addressEntity.setAddressLine2("m. 123");
         addressEntity.setCity("Warszawa");
