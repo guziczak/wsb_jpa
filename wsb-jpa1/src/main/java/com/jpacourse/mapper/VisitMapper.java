@@ -17,7 +17,7 @@ public class VisitMapper {
         for (VisitEntity visitEntity : visitEntityList) {
             VisitTO visit = new VisitTO();
             visit.setTime(visitEntity.getTime());
-            visit.setDoctor(DoctorMapper.mapToTO(visitEntity.getDoctorEntity()));
+            visit.setDoctor(DoctorMapper.mapToTO(visitEntity.getDoctor()));
             visit.setMedicalTreatment(MedicalTreatmentMapper.mapToTO(visitEntity.getMedicalTreatmentEntityList()));
             visitList.add(visit);
         }
@@ -28,7 +28,7 @@ public class VisitMapper {
     public static VisitTO mapToTO(VisitEntity visitEntity) {
         VisitTO visit = new VisitTO();
         visit.setTime(visitEntity.getTime());
-        visit.setDoctor(DoctorMapper.mapToTO(visitEntity.getDoctorEntity()));
+        visit.setDoctor(DoctorMapper.mapToTO(visitEntity.getDoctor()));
         visit.setMedicalTreatment(MedicalTreatmentMapper.mapToTO(visitEntity.getMedicalTreatmentEntityList()));
 
         return visit;

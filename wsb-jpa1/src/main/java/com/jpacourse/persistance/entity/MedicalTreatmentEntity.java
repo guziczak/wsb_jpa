@@ -15,7 +15,10 @@ public class MedicalTreatmentEntity {
 	@Column(nullable = false)
 	private String description;
 
+	private String name;
+
 	@Enumerated(EnumType.STRING)
+	@Column(name = "treatmenttype")
 	private TreatmentType type;
 
 	public Long getId() {
@@ -42,4 +45,11 @@ public class MedicalTreatmentEntity {
 		this.type = type;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

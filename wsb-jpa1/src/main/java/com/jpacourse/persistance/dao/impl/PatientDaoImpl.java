@@ -29,7 +29,7 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
         VisitEntity visit = new VisitEntity();
         visit.setTime(visitDate);
         visit.setDescription(visitDescription);
-        visit.setDoctorEntity(doctorEntity);
+        visit.setDoctor(doctorEntity);
 
         patientEntity.getVisitEntityList().add(visit);
         visit.setPatient(patientEntity);
@@ -48,7 +48,7 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
     @Override
     public List<PatientEntity> findPatientWhereVisitIsMoreThan(int numberOfVisits) {
         return entityManager
-                .createQuery("SELECT p FROM PatientEntity p WHERE SIZE(p.visitEntityList) > :numberOfVisits")
+                .createQuery("SELECT p FROM PatientEntity p WHERE SIZE(p.visitEntityList) > :numberOfVisits", PatientEntity.class)
                 .setParameter("numberOfVisits", numberOfVisits)
                 .getResultList();
     }
@@ -56,8 +56,13 @@ public class PatientDaoImpl extends AbstractDao<PatientEntity, Long> implements 
     @Override
     public List<PatientEntity> findPatientWhereDateOfRegisterIsLaterThan(LocalDate date) {
         return entityManager
-                .createQuery("SELECT p FROM PatientEntity p WHERE p.dateOfRegister > :date")
+                .createQuery("SELECT p FROM PatientEntity p WHERE p.dateOfRegister > :date", PatientEntity.class)
                 .setParameter("date", date)
                 .getResultList();
+    }
+
+    @Override
+    protected Class<PatientEntity> getDomainClass() {
+        return PatientEntity.class;
     }
 }

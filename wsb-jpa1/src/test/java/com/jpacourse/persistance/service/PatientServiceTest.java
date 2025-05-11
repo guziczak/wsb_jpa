@@ -114,7 +114,7 @@ public class PatientServiceTest {
 
     private VisitEntity createAndSaveVisit(DoctorEntity doctor, PatientEntity patient) {
         VisitEntity visit = new VisitEntity();
-        visit.setDoctorEntity(doctor);
+        visit.setDoctor(doctor);
         visit.setTime(LocalDateTime.of(2025, 4, 11, 12, 0));
         visit.setPatient(patient);
 

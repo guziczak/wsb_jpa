@@ -5,5 +5,5 @@ import com.jpacourse.dto.VisitTO;
 import java.util.List;
 
 public interface VisitService {
-    List<VisitTO> findByPatientId(final int patientId);
+    List<VisitTO> findByPatientId(final Long patientId);
 }

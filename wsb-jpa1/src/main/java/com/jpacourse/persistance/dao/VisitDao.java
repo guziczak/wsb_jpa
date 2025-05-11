@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface VisitDao extends Dao<VisitEntity, Long> {
 
-    List<VisitEntity> findVisitByPatientId(final int patientId);
+    List<VisitEntity> findVisitByPatientId(final Long patientId);
 }
