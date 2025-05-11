@@ -7,26 +7,20 @@ import jakarta.persistence.OptimisticLockException;
 import jakarta.persistence.PersistenceUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Test class for testing optimistic locking mechanism.
- * Uses existing entities from data.sql instead of creating new ones to avoid ID conflicts.
- */
+
 @SpringBootTest
 public class OptimisticLockingTest {
 
     @PersistenceUnit
     private EntityManagerFactory entityManagerFactory;
     
-    // ID of an existing patient from data.sql
     private static final Long EXISTING_PATIENT_ID = 3L;
     
     private PatientEntity testPatient;
@@ -34,27 +28,20 @@ public class OptimisticLockingTest {
     
     @BeforeEach
     public void setUp() {
-        // Initialize version field for all patients if needed
         initializeVersionField();
         
-        // Load the test patient
         testPatient = loadExistingPatient();
         initialVersion = testPatient.getVersion();
         
-        // Ensure version is not null
         assertNotNull(initialVersion, "Version field must not be null");
     }
 
-    /**
-     * Initialize version field for all patients with NULL version values
-     */
     private void initializeVersionField() {
         EntityManager em = null;
         try {
             em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
             
-            // Update all patients with NULL version to have version=0
             int updatedRows = em.createNativeQuery("UPDATE PATIENT SET VERSION = 0 WHERE VERSION IS NULL")
                 .executeUpdate();
             
@@ -75,9 +62,6 @@ public class OptimisticLockingTest {
         }
     }
     
-    /**
-     * Helper method to load the existing patient from database
-     */
     private PatientEntity loadExistingPatient() {
         EntityManager em = null;
         try {
@@ -94,36 +78,26 @@ public class OptimisticLockingTest {
         }
     }
     
-    /**
-     * Test that verifies optimistic locking by simulating two concurrent
-     * transactions trying to modify the same entity. Only one should succeed,
-     * the other should throw OptimisticLockException when trying to commit changes.
-     */
     @Test
     public void testOptimisticLocking() throws InterruptedException {
-        // Test data
         String newPhoneNumber = "999-888-777";
         String newEmail = "updated@example.com";
         
-        // When: Two threads try to update the same patient simultaneously
         CountDownLatch latch = new CountDownLatch(2); // To synchronize thread execution
         AtomicBoolean exceptionOccurred = new AtomicBoolean(false);
         
-        // Thread 1 - Updates patient's phone number
         Thread thread1 = new Thread(() -> {
             EntityManager em = null;
             try {
                 em = entityManagerFactory.createEntityManager();
                 em.getTransaction().begin();
                 
-                // Find and modify patient
                 PatientEntity patient1 = em.find(PatientEntity.class, EXISTING_PATIENT_ID);
                 assertEquals(initialVersion, patient1.getVersion());
                 
                 patient1.setTelephoneNumber(newPhoneNumber);
-                em.flush(); // Force update and version increment
+                em.flush();
                 
-                // Wait to allow thread 2 to read the entity before commit
                 Thread.sleep(500);
                 
                 em.getTransaction().commit();
@@ -142,26 +116,21 @@ public class OptimisticLockingTest {
             }
         });
         
-        // Thread 2 - Tries to update patient's email
         Thread thread2 = new Thread(() -> {
             EntityManager em = null;
             try {
-                // Wait to ensure thread 1 has started transaction
                 Thread.sleep(100);
                 
                 em = entityManagerFactory.createEntityManager();
                 em.getTransaction().begin();
                 
-                // Find and modify patient (with the old version value)
                 PatientEntity patient2 = em.find(PatientEntity.class, EXISTING_PATIENT_ID);
                 assertEquals(initialVersion, patient2.getVersion());
                 
                 patient2.setEmail(newEmail);
                 
-                // Wait until thread 1 commits its changes
                 Thread.sleep(1000);
                 
-                // This should throw OptimisticLockException since thread 1 already updated the entity
                 em.flush();
                 em.getTransaction().commit();
             } catch (Exception e) {
@@ -182,17 +151,13 @@ public class OptimisticLockingTest {
             }
         });
         
-        // Start both threads
         thread1.start();
         thread2.start();
         
-        // Wait for both threads to complete
         latch.await();
         
-        // Then: Second thread should receive OptimisticLockException
         assertTrue(exceptionOccurred.get(), "OptimisticLockException should have occurred");
         
-        // And: Check that thread 1's changes were saved
         PatientEntity updatedPatient = loadExistingPatient();
         assertEquals(newPhoneNumber, updatedPatient.getTelephoneNumber(), 
                 "Phone number should have been updated");
@@ -201,22 +166,16 @@ public class OptimisticLockingTest {
         assertNotEquals(newEmail, updatedPatient.getEmail(), 
                 "Email should not have been updated");
         
-        // Restore original phone number to make the test idempotent
         resetPatientPhone(testPatient.getTelephoneNumber());
     }
     
-    /**
-     * Test that verifies version field is properly incremented when updating an entity.
-     */
     @Test
     public void testVersionIncrement() {
-        // Test data
         String originalFirstName = testPatient.getFirstName();
         String originalLastName = testPatient.getLastName();
         String newFirstName = "UpdatedFirstName";
         String newLastName = "UpdatedLastName";
         
-        // When: We update the patient in a new transaction
         EntityManager em = null;
         try {
             em = entityManagerFactory.createEntityManager();
@@ -233,14 +192,12 @@ public class OptimisticLockingTest {
             }
         }
         
-        // Then: Version should be incremented
         PatientEntity updatedPatient = loadExistingPatient();
         assertEquals(initialVersion + 1, updatedPatient.getVersion(), 
                 "Version should be incremented after update");
         assertEquals(newFirstName, updatedPatient.getFirstName(), 
                 "First name should have been updated");
         
-        // When: We update again in a new transaction
         try {
             em = entityManagerFactory.createEntityManager();
             em.getTransaction().begin();
@@ -256,20 +213,15 @@ public class OptimisticLockingTest {
             }
         }
         
-        // Then: Version should be incremented again
         PatientEntity twiceUpdatedPatient = loadExistingPatient();
         assertEquals(initialVersion + 2, twiceUpdatedPatient.getVersion(), 
                 "Version should be incremented twice after two updates");
         assertEquals(newLastName, twiceUpdatedPatient.getLastName(), 
                 "Last name should have been updated");
         
-        // Restore original values to make the test idempotent
         resetPatientName(originalFirstName, originalLastName);
     }
     
-    /**
-     * Helper method to restore patient's original phone number
-     */
     private void resetPatientPhone(String originalPhone) {
         EntityManager em = null;
         try {
@@ -287,9 +239,6 @@ public class OptimisticLockingTest {
         }
     }
     
-    /**
-     * Helper method to restore patient's original first and last name
-     */
     private void resetPatientName(String originalFirstName, String originalLastName) {
         EntityManager em = null;
         try {
