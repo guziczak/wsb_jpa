@@ -430,6 +430,39 @@
         .modal-overlay.active .modal-content {
             transform: translateY(0);
         }
+
+        /* Filters section */
+        .filters-section {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filters-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .filters-toggle {
+            color: var(--secondary-color);
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .filters-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+        }
     </style>
 </head>
 <body>
@@ -442,7 +475,7 @@
         <div class="tab active" data-tab="find-patient">Wyszukaj pacjenta</div>
         <div class="tab" data-tab="all-patients">Lista pacjentów</div>
         <div class="tab" data-tab="add-patient">Dodaj pacjenta</div>
-        <div class="tab" data-tab="edit-patient">Edytuj pacjenta</div>
+        <div class="tab" data-tab="search-patients">Zaawansowane wyszukiwanie</div>
     </div>
 
     <!-- Wyszukaj pacjenta -->
@@ -653,7 +686,64 @@
         </form>
     </div>
 
-    <!-- Edytuj pacjenta -->
+    <!-- Zaawansowane wyszukiwanie -->
+    <div class="tab-content" id="search-patients">
+        <h2>Zaawansowane wyszukiwanie pacjentów</h2>
+        <div id="message-advanced-search" class="message hidden">
+            <span class="close-btn">&times;</span>
+            <span class="message-text"></span>
+        </div>
+        <div id="advanced-search-loader" class="loader hidden"></div>
+
+        <div class="filters-section">
+            <div class="filters-header">
+                <h3>Filtry wyszukiwania</h3>
+            </div>
+            <div class="filters-content">
+                <div class="filter-item">
+                    <label for="search-by-lastname">Wyszukaj po nazwisku:</label>
+                    <input type="text" id="search-by-lastname" placeholder="Wprowadź nazwisko">
+                    <button id="search-lastname-btn" class="primary-btn" style="margin-top: 10px;">Wyszukaj</button>
+                </div>
+
+                <div class="filter-item">
+                    <label for="search-by-visits">Pacjenci z liczbą wizyt większą niż:</label>
+                    <input type="number" id="search-by-visits" min="0" placeholder="Podaj liczbę wizyt">
+                    <button id="search-visits-btn" class="primary-btn" style="margin-top: 10px;">Wyszukaj</button>
+                </div>
+
+                <div class="filter-item">
+                    <label for="search-by-register-date">Pacjenci zarejestrowani po dacie:</label>
+                    <input type="date" id="search-by-register-date">
+                    <button id="search-date-btn" class="primary-btn" style="margin-top: 10px;">Wyszukaj</button>
+                </div>
+            </div>
+        </div>
+
+        <h3>Wyniki wyszukiwania</h3>
+        <table id="search-results-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imię i nazwisko</th>
+                <th>Numer pacjenta</th>
+                <th>Numer telefonu</th>
+                <th>Email</th>
+                <th>Data rejestracji</th>
+                <th>Liczba wizyt</th>
+                <th>Akcje</th>
+            </tr>
+            </thead>
+            <tbody id="search-results-body">
+                <!-- Wyniki wyszukiwania będą tutaj dynamicznie dodawane -->
+                <tr>
+                    <td colspan="8" style="text-align: center;">Użyj filtrów powyżej, aby wyszukać pacjentów</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Edycja pacjenta (niewidoczna jako zakładka, pokazywana programowo) -->
     <div class="tab-content" id="edit-patient">
         <h2>Edytuj pacjenta</h2>
         <div id="message-edit" class="message hidden">
@@ -802,6 +892,17 @@
         const messageEdit = document.getElementById('message-edit');
         const editLoader = document.getElementById('edit-loader');
         const cancelEditBtn = document.getElementById('cancel-edit-btn');
+
+        // Referencje do elementów DOM - zaawansowane wyszukiwanie
+        const searchByLastname = document.getElementById('search-by-lastname');
+        const searchByVisits = document.getElementById('search-by-visits');
+        const searchByRegisterDate = document.getElementById('search-by-register-date');
+        const searchLastnameBtn = document.getElementById('search-lastname-btn');
+        const searchVisitsBtn = document.getElementById('search-visits-btn');
+        const searchDateBtn = document.getElementById('search-date-btn');
+        const searchResultsBody = document.getElementById('search-results-body');
+        const messageAdvancedSearch = document.getElementById('message-advanced-search');
+        const advancedSearchLoader = document.getElementById('advanced-search-loader');
 
         // Referencje do elementów DOM - modal potwierdzenia
         const confirmModal = document.getElementById('confirm-modal');
@@ -963,6 +1064,78 @@
                 return [];
             } finally {
                 listLoader.classList.add('hidden');
+            }
+        }
+
+        // Funkcja do wyszukiwania pacjentów po nazwisku
+        async function fetchPatientsByLastName(lastName) {
+            try {
+                advancedSearchLoader.classList.remove('hidden');
+
+                const response = await fetch(`${API_URL}/patients/by-last-name/${lastName}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                handleHttpError(response);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                showMessage(messageAdvancedSearch, error.message || 'Wystąpił błąd podczas wyszukiwania pacjentów', 'error');
+                return [];
+            } finally {
+                advancedSearchLoader.classList.add('hidden');
+            }
+        }
+
+        // Funkcja do wyszukiwania pacjentów z liczbą wizyt większą niż
+        async function fetchPatientsByVisitCount(count) {
+            try {
+                advancedSearchLoader.classList.remove('hidden');
+
+                const response = await fetch(`${API_URL}/patients/find-where-visits-is-greater-than/${count}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                handleHttpError(response);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                showMessage(messageAdvancedSearch, error.message || 'Wystąpił błąd podczas wyszukiwania pacjentów', 'error');
+                return [];
+            } finally {
+                advancedSearchLoader.classList.add('hidden');
+            }
+        }
+
+        // Funkcja do wyszukiwania pacjentów zarejestrowanych po dacie
+        async function fetchPatientsByRegisterDate(date) {
+            try {
+                advancedSearchLoader.classList.remove('hidden');
+
+                const response = await fetch(`${API_URL}/patients/find-where-date-of-register-is-later-than/${date}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                handleHttpError(response);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                showMessage(messageAdvancedSearch, error.message || 'Wystąpił błąd podczas wyszukiwania pacjentów', 'error');
+                return [];
+            } finally {
+                advancedSearchLoader.classList.add('hidden');
             }
         }
 
@@ -1150,6 +1323,47 @@
             });
         }
 
+        // Funkcja do wyświetlania wyników wyszukiwania
+        function displaySearchResults(patients) {
+            if (!patients || patients.length === 0) {
+                searchResultsBody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Brak wyników wyszukiwania</td></tr>';
+                return;
+            }
+
+            let tableHTML = '';
+
+            patients.forEach(patient => {
+                const visitsCount = patient.visits ? patient.visits.length : 0;
+                
+                tableHTML += `
+                    <tr>
+                        <td>${patient.id}</td>
+                        <td>${patient.firstName} ${patient.lastName}</td>
+                        <td>${patient.patientNumber || 'Brak'}</td>
+                        <td>${patient.telephoneNumber || 'Brak'}</td>
+                        <td>${patient.email || 'Brak'}</td>
+                        <td>${formatDate(patient.dateOfRegister)}</td>
+                        <td>${visitsCount}</td>
+                        <td>
+                            <div class="action-icons">
+                                <div class="action-icon view-icon" data-id="${patient.id}" data-action="view">👁️</div>
+                                <div class="action-icon edit-icon" data-id="${patient.id}" data-action="edit">✏️</div>
+                                <div class="action-icon delete-icon" data-id="${patient.id}" data-action="delete">🗑️</div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            searchResultsBody.innerHTML = tableHTML;
+
+            // Dodanie obsługi akcji
+            const actionIcons = document.querySelectorAll('.action-icon');
+            actionIcons.forEach(icon => {
+                icon.addEventListener('click', handlePatientAction);
+            });
+        }
+
         // Funkcja do obsługi akcji na pacjencie (podgląd, edycja, usunięcie)
         function handlePatientAction(event) {
             const patientId = event.target.dataset.id;
@@ -1190,7 +1404,6 @@
                 tabs.forEach(t => t.classList.remove('active'));
                 tabContents.forEach(c => c.classList.remove('active'));
 
-                document.querySelector('[data-tab="edit-patient"]').classList.add('active');
                 document.getElementById('edit-patient').classList.add('active');
             }
         }
@@ -1313,7 +1526,6 @@
                 tabs.forEach(t => t.classList.remove('active'));
                 tabContents.forEach(c => c.classList.remove('active'));
 
-                document.querySelector('[data-tab="edit-patient"]').classList.add('active');
                 document.getElementById('edit-patient').classList.add('active');
             }
         });
@@ -1407,6 +1619,61 @@
 
             document.querySelector('[data-tab="find-patient"]').classList.add('active');
             document.getElementById('find-patient').classList.add('active');
+        });
+
+        // Obsługa przycisków zaawansowanego wyszukiwania
+        searchLastnameBtn.addEventListener('click', async () => {
+            const lastName = searchByLastname.value.trim();
+
+            if (!lastName) {
+                showMessage(messageAdvancedSearch, 'Wprowadź nazwisko pacjenta', 'warning');
+                return;
+            }
+
+            const patients = await fetchPatientsByLastName(lastName);
+            displaySearchResults(patients);
+
+            if (patients.length > 0) {
+                showMessage(messageAdvancedSearch, `Znaleziono ${patients.length} pacjentów o nazwisku ${lastName}`, 'success');
+            } else {
+                showMessage(messageAdvancedSearch, `Nie znaleziono pacjentów o nazwisku ${lastName}`, 'warning');
+            }
+        });
+
+        searchVisitsBtn.addEventListener('click', async () => {
+            const visitsCount = searchByVisits.value.trim();
+
+            if (!visitsCount) {
+                showMessage(messageAdvancedSearch, 'Wprowadź liczbę wizyt', 'warning');
+                return;
+            }
+
+            const patients = await fetchPatientsByVisitCount(visitsCount);
+            displaySearchResults(patients);
+
+            if (patients.length > 0) {
+                showMessage(messageAdvancedSearch, `Znaleziono ${patients.length} pacjentów z liczbą wizyt większą niż ${visitsCount}`, 'success');
+            } else {
+                showMessage(messageAdvancedSearch, `Nie znaleziono pacjentów z liczbą wizyt większą niż ${visitsCount}`, 'warning');
+            }
+        });
+
+        searchDateBtn.addEventListener('click', async () => {
+            const registerDate = searchByRegisterDate.value;
+
+            if (!registerDate) {
+                showMessage(messageAdvancedSearch, 'Wybierz datę rejestracji', 'warning');
+                return;
+            }
+
+            const patients = await fetchPatientsByRegisterDate(registerDate);
+            displaySearchResults(patients);
+
+            if (patients.length > 0) {
+                showMessage(messageAdvancedSearch, `Znaleziono ${patients.length} pacjentów zarejestrowanych po ${formatDate(registerDate)}`, 'success');
+            } else {
+                showMessage(messageAdvancedSearch, `Nie znaleziono pacjentów zarejestrowanych po ${formatDate(registerDate)}`, 'warning');
+            }
         });
     });
 </script>
