@@ -51,10 +51,8 @@ public class DoctorServiceImpl extends AbstractService<DoctorTO, DoctorEntity, L
         DoctorEntity savedDoctor;
 
         if (doctor.getId() == null) {
-            // New entity - use save
             savedDoctor = doctorDao.save(doctor);
         } else {
-            // Existing entity - use update
             savedDoctor = doctorDao.update(doctor);
         }
 

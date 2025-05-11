@@ -1,7 +1,6 @@
 package com.jpacourse.rest;
 
 import com.jpacourse.dto.DoctorTO;
-import com.jpacourse.rest.exception.EntityNotFoundException;
 import com.jpacourse.service.DoctorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,7 +40,6 @@ public class DoctorController {
 
     @PutMapping("/{id}")
     public ResponseEntity<DoctorTO> updateDoctor(@PathVariable Long id, @RequestBody DoctorTO doctorTO) {
-        // FindById will throw EntityNotFoundException if not found
         doctorService.findById(id);
 
         doctorTO.setId(id);
@@ -51,7 +49,6 @@ public class DoctorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
-        // FindById will throw EntityNotFoundException if not found
         doctorService.findById(id);
 
         doctorService.delete(id);
